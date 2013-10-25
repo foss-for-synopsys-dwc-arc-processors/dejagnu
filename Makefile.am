@@ -107,6 +107,7 @@ baseboard_DATA = \
 	baseboards/androideabi.exp \
 	baseboards/am33_2.0-libremote.exp \
 	baseboards/arc-sim.exp \
+	baseboards/aarch64-fv8.exp \
 	baseboards/arm-linux.exp \
 	baseboards/arm-odroidU2.exp \
 	baseboards/arm-odroidXU.exp \
