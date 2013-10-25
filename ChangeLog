@@ -1,3 +1,11 @@
+2013-10-24  Rob Savoye  <rob.savoye@linaro.org>
+
+	* baseboards/arm-linux.exp: Base file for ARM based Linux
+	targets.
+	* baseboards/arm-odroidU2.exp: Odroid U2 board support.
+	* baseboards/arm-odroidXU.exp: Odroid XU board support.
+	* baseboards/arm-chromebook.exp: ARM based Chromebook support.
+
 2013-10-05  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
 	* baseboards/unix.exp: Add gdb settings to not use hardware
