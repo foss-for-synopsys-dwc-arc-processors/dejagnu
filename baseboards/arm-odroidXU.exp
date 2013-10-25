@@ -16,8 +16,6 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
-# This is a list of toolchains that are supported on this board.
-
 load_generic_config "arm-linux"
 
 set_board_info hostname odroidXU
