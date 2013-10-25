@@ -1,3 +1,10 @@
+2013-10-25  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/rsh.exp (rsh_open, rsh_download): Process a port option so
+	ssh and scp can use a custom port.
+	* baseboards/aarch64-fv8.exp: ARM Foundation Model (simulator)
+	support for aarch64. (arm64)
+
 2013-10-24  Rob Savoye  <rob.savoye@linaro.org>
 
 	* baseboards/arm-linux.exp: Base file for ARM based Linux
