@@ -17,7 +17,7 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
-# Connect to HOSTNAME using rlogin(1).
+# Connect to HOSTNAME using rsh or ssh(1).
 #
 proc rsh_open { hostname } {
     global spawn_id
@@ -39,6 +39,10 @@ proc rsh_open { hostname } {
 	set rsh_useropts "-l [board_info $hostname username]"
     } else {
 	set rsh_useropts ""
+    }
+
+    if {[board_info $hostname exists port]} {
+	append rsh_useropts "-p [board_info $hostname port]"
     }
 
     # Get the hostname and port number from the config array.
@@ -169,6 +173,10 @@ proc rsh_download {desthost srcfile destfile} {
     } else {
 	set rsh_useropts ""
 	set rcp_user ""
+    }
+
+    if {[board_info $hostname exists port]} {
+	append rsh_useropts " -P [board_info $hostname port]"
     }
 
     if {[board_info $desthost exists name]} {
