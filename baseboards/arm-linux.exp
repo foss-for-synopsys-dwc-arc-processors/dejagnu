@@ -26,7 +26,6 @@ set_board_info rsh_prog /usr/bin/ssh
 set_board_info rcp_prog /usr/bin/scp
 set_board_info ldflags   "-static"
 set_board_info protocol "ssh"
-#set_board_info hostname odroidU2
 
 # There's no support for argument-passing (yet).
 set_board_info noargs 1
