@@ -41,10 +41,6 @@ proc rsh_open { hostname } {
 	set rsh_useropts ""
     }
 
-    if {[board_info $hostname exists port]} {
-	append rsh_useropts "-p [board_info $hostname port]"
-    }
-
     # Get the hostname and port number from the config array.
     if {[board_info $hostname exists name]} {
 	set hostname [board_info $hostname name]
