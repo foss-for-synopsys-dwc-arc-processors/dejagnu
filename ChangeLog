@@ -1,5 +1,10 @@
 2013-11-25  Rob Savoye  <rob.savoye@linaro.org>
 
+	* Makefile.am (baseboard_DATA): Remove the Linaro specific board
+	files, they now live elsewhere.
+	* configure, aclocl.m4, Makefile.in: Regenerated.
+	* baseboards/arm-linux.exp: Remove bogus hostname setting.
+
 	* arm-chromebook.exp arm-odroidU2.exp arm-odroidXU.exp: Moved to
 	Cbuildv2 tool, as they're Linaro TCWG build farm specific.
 
