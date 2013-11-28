@@ -1,3 +1,8 @@
+2013-11-28  Rob Savoye  <rob.savoye@linaro.org>
+
+	* INSTALL, depcomp, install-sh, missing, mkinstalldirs: Updated
+	utility files to Automake 1.13.3.
+
 2013-11-25  Rob Savoye  <rob.savoye@linaro.org>
 
 	* Makefile.am (baseboard_DATA): Remove the Linaro specific board
