@@ -171,8 +171,8 @@ proc rsh_download {desthost srcfile destfile} {
 	set rcp_user ""
     }
 
-    if {[board_info $hostname exists port]} {
-	append rsh_useropts " -P [board_info $hostname port]"
+    if {[board_info $desthost exists port]} {
+	append rsh_useropts " -P [board_info $desthost port]"
     }
 
     if {[board_info $desthost exists name]} {
