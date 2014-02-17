@@ -1,3 +1,8 @@
+2014-02-17  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/rsh.exp: Fix typo, use $desthost instead of $hostname when
+	retrieving the port number for SSH.
+
 2013-11-28  Rob Savoye  <rob.savoye@linaro.org>
 
 	* INSTALL, depcomp, install-sh, missing, mkinstalldirs: Updated
