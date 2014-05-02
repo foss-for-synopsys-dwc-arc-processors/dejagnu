@@ -45,6 +45,7 @@ pkgdata_DATA = \
   lib/framework.exp \
   lib/ftp.exp \
   lib/kermit.exp \
+  lib/lava-tool.exp \
   lib/libgloss.exp \
   lib/remote.exp \
   lib/rlogin.exp \
