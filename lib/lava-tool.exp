@@ -25,61 +25,129 @@ proc lava_open { hostname } {
     # lava-tool job-output --overwrite http://rob-welcomehome@validation.linaro.org/RPC2/ 124075
     # lava-tool job-output --overwrite $hostname 124075
 
+    set_board_info hostname tcwgXXXXX
+
+    rsh_open $hostname
 }
 
 # Download SRCFILE to DESTFILE on DESTHOST.
 #
 proc lava_download {desthost srcfile destfile} {
+    rsh_download $desthost $srcfile $destfile
 }
 
 proc lava_upload {desthost srcfile destfile} {
+    rsh_upload $desthost $srcfile $destfile
 }
 
 # Execute CMD on BOARDNAME.
 #
 proc lava_exec { boardname program pargs inp outp } {
+    rsh_exec $boardname $program $pargs $inp $outp
 }
 
-proc json { } {
-    "actions": [
-        {
-            "command": "deploy_linaro_image",
-            "metadata": {
-                "js-builddate": "2014-03-21",
-                "js-buildsecs": "1395431537",
-                "js-buildtime": "13-52"
-            },
-            "parameters": {
-                "image": "http://community.validation.linaro.org/images/kvm/debian-7-4-base.img.gz"
-            }
-        },
-        {
-            "command": "lava_test_shell",
-            "parameters": {
-                "testdef_repos": [
-                    {
-                        "git-repo": "http://git.linaro.org/lava-team/hacking-session.git",
-                        "parameters": {
-                            "GATEWAY": "10.0.0.1",
-                            "PUB_KEY": ""
-                        },
-                        "testdef": "hacking-session-debian.yaml"
-                    }
-                ],
-                "timeout": 18000
-            }
-        },
-        {
-            "command": "submit_results",
-            "parameters": {
-                "server": "http://validation.linaro.org:80/RPC2/",
-                "stream": "/anonymous/akbennett/"
-            }
-        }
-    ],
-    "device_type": "kvm",
-    "health_check": false,
-    "job_name": "kvm-debian-7.4-with-hack-session",
-    "timeout": 18000
-}
+proc lava_json { hostname infile outfile } {
+    global srcdir
+
+    set DATE "20140502"
+    if {![board_info $hostname exists image]} {
+	set IMAGE "http://community.validation.linaro.org/images/kvm/debian-7-4-base.img.gz"
+    } else {
+	set IMAGE [board_info $hostname image]
+    }
+    if {![board_info $hostname exists testdef]} {
+	set TESTDEF "hacking-session-debian.yaml"
+    } else {
+	set TESTDEF [board_info $hostname testdef]
+    }
+    if {![board_info $hostname exists repo]} {
+	set REPO "http://git.linaro.org/lava-team/hacking-session.git"
+    } else {
+	set REPO [board_info $hostname repo]
+    }
+    if {![board_info $hostname exists gateway]} {
+	set GATEWAY "10.0.0.1"
+    } else {
+	set GATEWAY [board_info $hostname gateway]
+    }
+    if {![board_info $hostname exists server]} {
+	set SERVER "http://validation.linaro.org:80/RPC2/"
+    } else {
+	set SERVER [board_info $hostname server]
+    }
+    if {![board_info $hostname exists stream]} {
+	set STREAM "/anonymous/akbennett/"
+    } else {
+	set STREAM [board_info $hostname stream]
+    }
+    if {![board_info $hostname exists device]} {
+	set DEVICE "kvm"
+    } else {
+	set DEVICE [board_info $hostname device]
+    }
+    if {![board_info $hostname exists health]} {
+	set HEALTH "false"
+    } else {
+	set HEALTH [board_info $hostname health]
+    }
+    if {![board_info $hostname exists job]} {
+	set JOB "kvm-debian-7.4-with-hack-session"
+    } else {
+	set JOB [board_info $hostname job]
+    }
+    
+    set infd [open $infile r]
+    set outfd [open $outfile w]
+    while { [gets $infd cur_line]>=0 } {
+	if {![string match "*#*" $cur_line]} {
+	    if {![string match "*@*@*" $cur_line]} {
+		puts $outfd $cur_line
+	    } else {
+		set start [string first "@" $cur_line]
+		set end [string last "@" $cur_line]
+		set keyword [string range $cur_line $start $end]
+		switch $keyword {
+		    "@IMAGE@" {
+			set new_line [string replace $cur_line $start $end $IMAGE]
+		    }
+		    "@DATE@" {
+			set new_line [string replace $cur_line $start $end $DATE]
+		    }
+		    "@REPO@" {
+			set new_line [string replace $cur_line $start $end $REPO]
+		    }
+		    "@GATEWAY@" {
+			set new_line [string replace $cur_line $start $end $GATEWAY]
+		    }
+		    "@TESTDEF@" {
+			set new_line [string replace $cur_line $start $end $TESTDEF]
+		    }
+		    "@SERVER@" {
+			set new_line [string replace $cur_line $start $end $SERVER]
+		    }
+		    "@STREAM@" {
+			set new_line [string replace $cur_line $start $end $STREAM]
+		    }
+		    "@DEVICE@" {
+			set new_line [string replace $cur_line $start $end $DEVICE]
+		    }
+		    "@HEALTH@" {
+			set new_line [string replace $cur_line $start $end $HEALTH]
+		    }
+		    "@JOB@" {
+			set new_line [string replace $cur_line $start $end $JOB]
+		    }
+		    default {
+			set new_line $cur_line
+		    }
+		}
+		puts $outfd $new_line
+	    }
+	}
+    }
+    close $infd
+    close $outfd
+    unset infd
+    unset outfd
+
 }
