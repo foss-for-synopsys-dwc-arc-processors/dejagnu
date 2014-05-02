@@ -1,3 +1,9 @@
+2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
+
+	* baseboards/lava.exp: Add config info for using lava-tool.
+	* lib/lava-tool.exp: Add support for using lava-tool to control
+	remote LAVA build slaves.
+
 2014-02-17  Rob Savoye  <rob.savoye@linaro.org>
 
 	* lib/rsh.exp: Fix typo, use $desthost instead of $hostname when
