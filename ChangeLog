@@ -1,5 +1,8 @@
 2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
 
+	* Makefile.am: Install lib/lava-tool.exp.
+	* Makefie.in: regenerated.
+
 	* lib/lava-tool.exp (lava_json): Parse the input template and do
 	substitutions of keywords to produce the proper JSON file.
 
