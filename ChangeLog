@@ -1,5 +1,11 @@
 2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
 
+	* lib/lava-tool.exp (lava_json): Parse the input template and do
+	substitutions of keywords to produce the proper JSON file.
+
+	* config/lava.json: Add a template for the JSON file LAVA
+	needs. This later has substitutions made based on the board file.
+
 	* baseboards/lava.exp: Add config info for using lava-tool.
 	* lib/lava-tool.exp: Add support for using lava-tool to control
 	remote LAVA build slaves.
