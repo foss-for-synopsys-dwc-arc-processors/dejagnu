@@ -27,6 +27,7 @@ load_lib "kermit.exp"
 load_lib "tip.exp"
 load_lib "rsh.exp"
 load_lib "ftp.exp"
+load_lib lava-tool.exp
 
 # Open a connection to a remote host or target. This requires the target_info
 # array be filled in with the proper info to work.
