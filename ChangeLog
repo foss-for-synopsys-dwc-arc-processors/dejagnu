@@ -1,5 +1,7 @@
 2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
 
+	* lib/remote.exp: Load lib/lava-too.exp on startup.
+
 	* Makefile.am: Install lib/lava-tool.exp.
 	* Makefie.in: regenerated.
 
