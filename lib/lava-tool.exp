@@ -51,47 +51,47 @@ proc lava_json { hostname infile outfile } {
 
     set DATE "20140502"
     if {![board_info $hostname exists image]} {
-	set IMAGE "http://community.validation.linaro.org/images/kvm/debian-7-4-base.img.gz"
+	set IMAGE "ERROR: YOU NEED AN IMAGE FILE"
     } else {
 	set IMAGE [board_info $hostname image]
     }
     if {![board_info $hostname exists testdef]} {
-	set TESTDEF "hacking-session-debian.yaml"
+	set TESTDEF "ERROR: YOU NEED AN TESTDEF "
     } else {
 	set TESTDEF [board_info $hostname testdef]
     }
     if {![board_info $hostname exists repo]} {
-	set REPO "http://git.linaro.org/lava-team/hacking-session.git"
+	set REPO "ERROR: YOU NEED AN GIT REPO"
     } else {
 	set REPO [board_info $hostname repo]
     }
     if {![board_info $hostname exists gateway]} {
-	set GATEWAY "10.0.0.1"
+	set GATEWAY "ERROR: YOU NEED A GATEWAY"
     } else {
 	set GATEWAY [board_info $hostname gateway]
     }
     if {![board_info $hostname exists server]} {
-	set SERVER "http://validation.linaro.org:80/RPC2/"
+	set SERVER "ERROR: YOU NEED A LAVA SERVER URL"
     } else {
 	set SERVER [board_info $hostname server]
     }
     if {![board_info $hostname exists stream]} {
-	set STREAM "/anonymous/akbennett/"
+	set STREAM "ERROR: YOU NEED A PATH FOR THE STREAM"
     } else {
 	set STREAM [board_info $hostname stream]
     }
     if {![board_info $hostname exists device]} {
-	set DEVICE "kvm"
+	set DEVICE "ERROR: YOU NEED A DEVICE TYPE"
     } else {
 	set DEVICE [board_info $hostname device]
     }
     if {![board_info $hostname exists health]} {
-	set HEALTH "false"
+	set HEALTH "ERROR: YOU NEED A HEALTH CHECK FLAG"
     } else {
 	set HEALTH [board_info $hostname health]
     }
     if {![board_info $hostname exists job]} {
-	set JOB "kvm-debian-7.4-with-hack-session"
+	set JOB "ERROR: YOU NEED A JOB NAME"
     } else {
 	set JOB [board_info $hostname job]
     }
