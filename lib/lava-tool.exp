@@ -1,0 +1,85 @@
+# Copyright (C) 2014 Free Software Foundation, Inc.
+#
+# This file is part of DejaGnu.
+#
+# DejaGnu is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# DejaGnu is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DejaGnu; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+
+# Connect to HOSTNAME using rsh or ssh(1).
+#
+load_lib "rsh.exp"
+
+proc lava_open { hostname } {
+    # lava-tool submit-job $hostname /tmp/job_116632.json
+    # lava-tool job-output --overwrite http://rob-welcomehome@validation.linaro.org/RPC2/ 124075
+    # lava-tool job-output --overwrite $hostname 124075
+
+}
+
+# Download SRCFILE to DESTFILE on DESTHOST.
+#
+proc lava_download {desthost srcfile destfile} {
+}
+
+proc lava_upload {desthost srcfile destfile} {
+}
+
+# Execute CMD on BOARDNAME.
+#
+proc lava_exec { boardname program pargs inp outp } {
+}
+
+proc json { } {
+    "actions": [
+        {
+            "command": "deploy_linaro_image",
+            "metadata": {
+                "js-builddate": "2014-03-21",
+                "js-buildsecs": "1395431537",
+                "js-buildtime": "13-52"
+            },
+            "parameters": {
+                "image": "http://community.validation.linaro.org/images/kvm/debian-7-4-base.img.gz"
+            }
+        },
+        {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_repos": [
+                    {
+                        "git-repo": "http://git.linaro.org/lava-team/hacking-session.git",
+                        "parameters": {
+                            "GATEWAY": "10.0.0.1",
+                            "PUB_KEY": ""
+                        },
+                        "testdef": "hacking-session-debian.yaml"
+                    }
+                ],
+                "timeout": 18000
+            }
+        },
+        {
+            "command": "submit_results",
+            "parameters": {
+                "server": "http://validation.linaro.org:80/RPC2/",
+                "stream": "/anonymous/akbennett/"
+            }
+        }
+    ],
+    "device_type": "kvm",
+    "health_check": false,
+    "job_name": "kvm-debian-7.4-with-hack-session",
+    "timeout": 18000
+}
+}
