@@ -484,6 +484,7 @@ baseboard_DATA = \
 	baseboards/i960-sim.exp \
 	baseboards/iq2000-sim.exp \
 	baseboards/jmr3904-sim.exp \
+	baseboards/lava.exp \
 	baseboards/linux-gdbserver.exp \
 	baseboards/linux-libremote.exp \
 	baseboards/m32r-elf.exp \
