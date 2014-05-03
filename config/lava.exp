@@ -107,3 +107,11 @@ proc ${board}_init { hostname } {
 
     verbose "LAVA Target is: $login ($host)" 1
 }
+
+proc ${board}_open { hostname } {
+    rsh_open $hostname
+}
+
+proc ${board}_download { dest file args } {
+    rsh_download [board_info $dest login] $file $args
+}
