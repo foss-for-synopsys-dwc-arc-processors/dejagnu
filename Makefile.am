@@ -79,6 +79,8 @@ config_DATA = \
 	config/h8300.exp \
 	config/i386-bozo.exp \
 	config/i960.exp \
+        config/lava.exp \
+        config/lava.json \
 	config/m32r-stub.exp \
 	config/m32r.exp \
 	config/m68hc11.exp \
@@ -139,7 +141,6 @@ baseboard_DATA = \
 	baseboards/i960-sim.exp \
 	baseboards/iq2000-sim.exp \
 	baseboards/jmr3904-sim.exp \
-	baseboards/lava.exp \
 	baseboards/linux-gdbserver.exp \
 	baseboards/linux-libremote.exp \
 	baseboards/m32r-elf.exp \
