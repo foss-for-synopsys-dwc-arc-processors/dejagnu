@@ -21,11 +21,9 @@
 load_lib "rsh.exp"
 
 proc lava_open { hostname } {
-    # lava-tool submit-job $hostname /tmp/job_116632.json
-    # lava-tool job-output --overwrite http://rob-welcomehome@validation.linaro.org/RPC2/ 124075
-    # lava-tool job-output --overwrite $hostname 124075
+    global board_info
 
-    set_board_info hostname tcwgXXXXX
+    puts "FIXME: lava_open $hostname"
 
     rsh_open $hostname
 }
@@ -47,9 +45,10 @@ proc lava_exec { boardname program pargs inp outp } {
 }
 
 proc lava_json { hostname infile outfile } {
-    global srcdir
+    global board_info
 
-    set DATE "20140502"
+    set DATE "2014-05-02"
+
     if {![board_info $hostname exists image]} {
 	set IMAGE "ERROR: YOU NEED AN IMAGE FILE"
     } else {
@@ -69,6 +68,11 @@ proc lava_json { hostname infile outfile } {
 	set GATEWAY "ERROR: YOU NEED A GATEWAY"
     } else {
 	set GATEWAY [board_info $hostname gateway]
+    }
+    if {![board_info $hostname exists pubkey]} {
+	set PUBKEY "ERROR: YOU NEED A PUBKEY"
+    } else {
+	set PUBKEY [board_info $hostname pubkey]
     }
     if {![board_info $hostname exists server]} {
 	set SERVER "ERROR: YOU NEED A LAVA SERVER URL"
@@ -119,6 +123,9 @@ proc lava_json { hostname infile outfile } {
 		    "@GATEWAY@" {
 			set new_line [string replace $cur_line $start $end $GATEWAY]
 		    }
+		    "@PUBKEY@" {
+			set new_line [string replace $cur_line $start $end $PUBKEY]
+		    }
 		    "@TESTDEF@" {
 			set new_line [string replace $cur_line $start $end $TESTDEF]
 		    }
@@ -151,3 +158,4 @@ proc lava_json { hostname infile outfile } {
     unset outfd
 
 }
+
