@@ -26,7 +26,7 @@
                         "parameters": {
                             # "GATEWAY": "10.0.0.1",
                             "GATEWAY": "@GATEWAY@",
-                            "PUB_KEY": ""
+                            "PUB_KEY": "@PUBKEY@"
                         },
                         # "testdef": "hacking-session-debian.yaml"
                         "testdef": "@TESTDEF@"
