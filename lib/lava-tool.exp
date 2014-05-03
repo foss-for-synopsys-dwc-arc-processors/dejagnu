@@ -18,36 +18,14 @@
 
 # Connect to HOSTNAME using rsh or ssh(1).
 #
-load_lib "rsh.exp"
-
-proc lava_open { hostname } {
-    global board_info
-
-    puts "FIXME: lava_open $hostname"
-
-    rsh_open $hostname
-}
-
-# Download SRCFILE to DESTFILE on DESTHOST.
-#
-proc lava_download {desthost srcfile destfile} {
-    rsh_download $desthost $srcfile $destfile
-}
-
-proc lava_upload {desthost srcfile destfile} {
-    rsh_upload $desthost $srcfile $destfile
-}
-
-# Execute CMD on BOARDNAME.
-#
-proc lava_exec { boardname program pargs inp outp } {
-    rsh_exec $boardname $program $pargs $inp $outp
-}
 
 proc lava_json { hostname infile outfile } {
     global board_info
 
-    set DATE "2014-05-02"
+    # FIXME: for some reason the clock in Tcl returns the wrong year.
+    set date [clock clicks]
+#    set DATE [clock format $date -format "%Y-%m-%d"]
+    set DATE [exec date "+%Y-%m-%d"]
 
     if {![board_info $hostname exists image]} {
 	set IMAGE "ERROR: YOU NEED AN IMAGE FILE"
