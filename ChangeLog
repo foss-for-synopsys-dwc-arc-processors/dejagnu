@@ -1,8 +1,13 @@
+2014-05-03  Rob Savoye  <rob.savoye@linaro.org>
+
+	* config/lava.exp ${board}_init: Parse the output file from LAVA
+	for the SSH connection info we need (user@ip & hostname).
+
 2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
 
 	* lib/remote.exp: Load lib/lava-too.exp on startup.
 
-	* Makefile.am: Install lib/lava-tool.exp.
+	* Makefile.am: Install lib/lava-tool.exp and config/lava.json.
 	* Makefie.in: regenerated.
 
 	* lib/lava-tool.exp (lava_json): Parse the input template and do
