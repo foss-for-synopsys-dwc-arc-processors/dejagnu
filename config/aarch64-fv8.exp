@@ -16,6 +16,7 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
+# This initializes the path to the Foundation Model
 proc ${board}_init { hostname } {
     global model
 
@@ -27,17 +28,15 @@ proc ${board}_init { hostname } {
 
 proc ${board}_download { dest file args } {
     global model timeout
-    set inp ""
-    set outp ""
 
     # Extract the endianess of the executable
-    set bigendian "[local_exec "od -An -v -j5 -N1 -t x1 $file" $inp $outp $timeout]"
+    set bigendian "[local_exec "od -An -v -j5 -N1 -t x1 $file" "" "" $timeout]"
     set args "--quiet"
     if { $bigendian == "01"} {
      	set args "$args --big-endian"
     }
     
-    return [local_exec "$model --image $file $args" $inp $outp $timeout]
+    return [local_exec "$model --image $file $args" "" "" $timeout]
 }
 
 
