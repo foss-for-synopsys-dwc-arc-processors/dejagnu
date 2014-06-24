@@ -1,3 +1,8 @@
+2014-06-24  Rob Savoye  <rob.savoye@linaro.org>
+
+	* config/aarch64-fv8.exp: New config file for using the ARM
+	Foundation Model for aarch64.
+
 2014-05-03  Rob Savoye  <rob.savoye@linaro.org>
 
 	* config/lava.exp ${board}_init: Parse the output file from LAVA
@@ -16,7 +21,6 @@
 	* config/lava.json: Add a template for the JSON file LAVA
 	needs. This later has substitutions made based on the board file.
 
-	* baseboards/lava.exp: Add config info for using lava-tool.
 	* lib/lava-tool.exp: Add support for using lava-tool to control
 	remote LAVA build slaves.
 
