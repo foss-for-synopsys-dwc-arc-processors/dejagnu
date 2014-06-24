@@ -1,0 +1,48 @@
+# Copyright (C) 2014 Free Software Foundation, Inc.
+#
+# This file is part of DejaGnu.
+#
+# DejaGnu is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# DejaGnu is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DejaGnu; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+
+set board v8model
+set output ""
+
+proc ${board}_init { hostname } {
+    global model
+
+    # Get the full path to the Foundation Model
+    if {[board_info $hostname exists model]} {
+        set model "[board_info $hostname model]"
+    }
+
+    verbose "FIXME: aarch64_init $model"
+}
+
+proc ${board}_download { dest file args } {
+    global model timeout
+    set inp ""
+    set outp ""
+    
+    verbose "FIXME: aarch64_download $file"
+    set status [catch "exec $model --image $file --quiet" output]
+    
+    return [local_exec "$model --image $file --quiet" $inp $outp $timeout]
+}
+
+
+proc ${board}_exec { dest file args } {
+    # This is a stub, since we can't execute remote commands on bare metal
+    return 0
+}
