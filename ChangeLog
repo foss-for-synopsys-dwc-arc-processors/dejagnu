@@ -3,6 +3,9 @@
 	* config/aarch64-fv8.exp: New config file for using the ARM
 	Foundation Model for aarch64.
 
+	* Makefile.am: Install config/aarchfv8.exp.
+	* Makefie.in: regenerated.
+
 2014-05-03  Rob Savoye  <rob.savoye@linaro.org>
 
 	* config/lava.exp ${board}_init: Parse the output file from LAVA
