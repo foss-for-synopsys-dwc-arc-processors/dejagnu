@@ -16,9 +16,6 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
-set board v8model
-set output ""
-
 proc ${board}_init { hostname } {
     global model
 
@@ -34,11 +31,17 @@ proc ${board}_download { dest file args } {
     global model timeout
     set inp ""
     set outp ""
+
+    # Extract the endianess of the executable
+    set bigendian "[local_exec "od -An -v -j5 -N1 -t x1 $file" $inp $outp $timeout]"
+    set args "--quiet"
+    if { $bigendian == "01"} {
+     	set args "$args --big-endian"
+    }
     
     verbose "FIXME: aarch64_download $file"
-    set status [catch "exec $model --image $file --quiet" output]
-    
-    return [local_exec "$model --image $file --quiet" $inp $outp $timeout]
+  
+    return [local_exec "$model --image $file $args" $inp $outp $timeout]
 }
 
 
