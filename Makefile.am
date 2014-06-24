@@ -19,7 +19,7 @@
 
 # Process this file with automake to generate Makefile.in
 
-AUTOMAKE_OPTIONS = dejagnu
+AUTOMAKE_OPTIONS = dejagnu subdir-objects
 export DEJAGNU
 
 EXTRA_DIST = ChangeLog-1992 MAINTAINERS runtest site.tmpl \
@@ -60,6 +60,7 @@ pkgdata_DATA = \
 configdir = $(pkgdatadir)/config
 config_DATA = \
 	config/README \
+	config/aarchfv8.exp \
 	config/adb.exp \
 	config/arc.exp \
 	config/arm-ice.exp \
