@@ -23,8 +23,6 @@ proc ${board}_init { hostname } {
     if {[board_info $hostname exists model]} {
         set model "[board_info $hostname model]"
     }
-
-    verbose "FIXME: aarch64_init $model"
 }
 
 proc ${board}_download { dest file args } {
@@ -39,8 +37,6 @@ proc ${board}_download { dest file args } {
      	set args "$args --big-endian"
     }
     
-    verbose "FIXME: aarch64_download $file"
-  
     return [local_exec "$model --image $file $args" $inp $outp $timeout]
 }
 
