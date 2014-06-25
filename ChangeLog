@@ -1,5 +1,9 @@
 2014-06-24  Rob Savoye  <rob.savoye@linaro.org>
 
+	* config/aarch64-fv8.exp: Fix big-endian test. LE is 01, BE is 02.
+
+2014-06-24  Rob Savoye  <rob.savoye@linaro.org>
+
 	* config/aarch64-fv8.exp: New config file for using the ARM
 	Foundation Model for aarch64.
 

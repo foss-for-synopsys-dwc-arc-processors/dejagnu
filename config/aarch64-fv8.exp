@@ -32,7 +32,7 @@ proc ${board}_download { dest file args } {
     # Extract the endianess of the executable
     set bigendian "[local_exec "od -An -v -j5 -N1 -t x1 $file" "" "" $timeout]"
     set args "--quiet"
-    if { $bigendian == "01"} {
+    if { $bigendian == "02"} {
      	set args "$args --big-endian"
     }
     
