@@ -402,7 +402,7 @@ pkgdata_DATA = \
 configdir = $(pkgdatadir)/config
 config_DATA = \
 	config/README \
-	config/aarch-fv8.exp \
+	config/aarch64-fv8.exp \
 	config/adb.exp \
 	config/arc.exp \
 	config/arm-ice.exp \
