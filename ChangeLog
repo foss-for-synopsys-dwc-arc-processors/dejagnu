@@ -1,5 +1,4 @@
 2014-06-25  Rob Savoye  <rob.savoye@linaro.org>
-
 	* runtest.exp: (lookfor-file): Fix bug were none of the releative
 	paths were actually being used for file lookup.
 
@@ -70,6 +69,64 @@
 	* baseboards/arm-odroidU2.exp: Odroid U2 board support.
 	* baseboards/arm-odroidXU.exp: Odroid XU board support.
 	* baseboards/arm-chromebook.exp: ARM based Chromebook support.
+
+2014-06-06  Ben Elliston  <bje@gnu.org>
+
+	* depcomp, install-sh, missing: Update to latest versions.
+	* mkinstalldirs: Remove.
+	* Makefile.in: Regenerate.
+
+2014-06-04  Ben Elliston  <bje@gnu.org>
+
+	* Makefile.in: Regenerate with Automake 1.14.1.
+	* compile: Add missing file.
+
+2014-06-04  Ben Elliston  <bje@gnu.org>
+
+	* config.guess: Update to version 2014-03-23.
+	* config.sub: Likewise.
+
+2014-06-04  Ben Elliston  <bje@gnu.org>
+
+	* aclocal.m4: Regenerate with Automake 1.14.1.
+	* configure: Regenerate with Autoconf 2.69.
+
+2014-03-15  Steve Ellcey  <sellcey@mips.com>
+
+	* baseboards/multi-sim.exp (rpath_flags): Add libatomic.so check.
+
+2014-02-23  Steve Ellcey  <sellcey@mips.com>
+	    Richard Sandiford  <rdsandiford@googlemail.com>
+
+	* config/sim.exp (sim_exec): New.
+	(sim_file): New.
+
+2013-12-08  Richard Sandiford  <rdsandiford@googlemail.com>
+
+	* lib/dg.exp (dg-test): Don't put the expected and actual output
+	of a pattern test in the test name; send it to the log instead.
+
+2013-11-01  Steve Ellcey  <sellcey@mips.com>
+
+	* Makefile.am (baseboard_SCRIPTS): Add multi-sim.exp baseboard.
+	* Makefile.in: Regenerate.
+	* baseboards/multi-sim.exp: New.
+
+2013-10-31  Anton Kolesov  <anton.kolesov@synopsys.com>
+
+	* lib/remote.exp (standard_reboot): Return 1 instead of an empty string.
+	(remote_reboot): Add comment explaining return value of this procedure.
+	* doc/ref.xml (remote_reboot, standard_reboot): Document procedures.
+	* doc/dejagnu.texi: Regenerate.
+
+2013-10-15  Alexander Ivchenko  <alexander.ivchenko@intel.com>
+
+       * baseboards/androideabi.exp (process_multilib_options): Add option.
+       * config/adb.exp: Remove hardcoded -static option.
+       (adb_load): Add the possibility to change the temp directory. Also
+       handle permission potential problems.
+       (adb_exec): Do cd to android_tmp_dir first.
+>>>>>>> master
 
 2013-10-05  Jose E. Marchesi  <jose.marchesi@oracle.com>
 

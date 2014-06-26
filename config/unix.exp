@@ -26,6 +26,10 @@ if {![info exists board]} {
 # For rcp_download, rsh_exec.
 load_lib remote.exp
 
+proc make_absolute {pathname} {
+    file join [pwd] $pathname
+}
+
 #
 # unix_load -- load the program and execute it
 #
@@ -90,6 +94,15 @@ proc unix_load { dest prog args } {
 	    setenv LD_LIBRARY_PATH $orig_ld_library_path
 	    setenv SHLIB_PATH $orig_ld_library_path
 	}
+    } elseif {[board_info $dest exists shared_dir]
+	      && [string match "[board_info $dest shared_dir]/*" "[make_absolute $prog]"]} {	
+	set status [remote_exec $dest "[make_absolute $prog]" $parg $inp]
+	if { [lindex $status 0] < 0 } {
+	    verbose -log "Couldn't execute [make_absolute $prog], [lindex $status 1]" 3
+	    return [list "unresolved" ""]
+	}
+	set output [lindex $status 1]
+	set status [lindex $status 0]
     } else {
 	set remotefile "/tmp/[file tail $prog].[pid]"
 	set remotefile [remote_download $dest $prog $remotefile]

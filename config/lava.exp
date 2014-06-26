@@ -24,7 +24,6 @@ process_multilib_options ""
 proc ${board}_init { hostname } {
     global board_info board srcdir
     global libdir
-    puts "FIXME: lava_init!!!!! $hostname"
 
     # process the template into a JSON file for LAVA
     set json /tmp/$hostname.json

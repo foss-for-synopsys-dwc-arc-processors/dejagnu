@@ -65,6 +65,9 @@ if {[info exists env(DEJAGNU_SIM_LINK_FLAGS)]} {
 if {[info exists env(DEJAGNU_SIM_LDSCRIPT)]} {
     set_board_info ldscript "$env(DEJAGNU_SIM_LDSCRIPT)"
 }
+if {[info exists env(DEJAGNU_SIM_SPECFILE)]} {
+    set_board_info specfile "-specs=$env(DEJAGNU_SIM_SPECFILE)"
+}
 
 if {[info exists env(DEJAGNU_SIM_BOARD_INFO)]} {
     foreach e $env(DEJAGNU_SIM_BOARD_INFO) {

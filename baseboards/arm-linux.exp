@@ -20,15 +20,12 @@
 
 process_multilib_options ""
 
-#load_generic_config ""
+load_generic_config "linux-gdbserver"
+
+set RSH /usr/bin/ssh
+set RCP /usr/bin/scp
 
 set_board_info rsh_prog /usr/bin/ssh
 set_board_info rcp_prog /usr/bin/scp
 set_board_info ldflags   "-static"
-set_board_info protocol "ssh"
-
-# There's no support for argument-passing (yet).
-set_board_info noargs 1
-
-set RSH /usr/bin/ssh
-set RCP /usr/bin/scp
+set_board_info protocol "standard"
