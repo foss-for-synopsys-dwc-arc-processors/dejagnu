@@ -1,4 +1,15 @@
+2014-06-26  Rob Savoye  <rob.savoye@linaro.org>
+
+	* aclocal.m4, Makefile.in, configure: Regenerated with automake
+	1.14.1, autoconf 2.69.
+
+2014-06-25  Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
+
+	* config/unix.exp: Add new proc make_absolute, and if shared_dir
+	is in the board file, use that for executing the test.
+
 2014-06-25  Rob Savoye  <rob.savoye@linaro.org>
+
 	* runtest.exp: (lookfor-file): Fix bug were none of the releative
 	paths were actually being used for file lookup.
 
