@@ -97,7 +97,11 @@ proc unix_load { dest prog args } {
 	}
     } elseif {[board_info $dest exists shared_dir]
 	      && [string match "[board_info $dest shared_dir]/*" "[make_absolute $prog]"]} {
-	set status [remote_exec $dest "[make_absolute $prog]" $parg $inp]
+	if {[board_info $dest exists remote_sim]} {
+	    set status [remote_exec $dest "[board_info $dest remote_sim] [make_absolute $prog]" $parg $inp]
+	} else {
+	    set status [remote_exec $dest "[make_absolute $prog]" $parg $inp]
+	}
 	if { [lindex $status 0] < 0 } {
 	    verbose -log "Couldn't execute [make_absolute $prog], [lindex $status 1]" 3
 	    return [list "unresolved" ""]
@@ -128,7 +132,11 @@ proc unix_load { dest prog args } {
 		return [list "unresolved" ""]
 	    }
 	}
-	set status [remote_exec $dest "$remotefile" $parg $inp]
+	if {[board_info $dest exists remote_sim]} {
+	    set status [remote_exec $dest "[board_info $dest remote_sim] $remotefile" $parg $inp]
+	} else {
+	    set status [remote_exec $dest "$remotefile" $parg $inp]
+	}
 	remote_file $dest delete $remotefile.o $remotefile
 	if { [lindex $status 0] < 0 } {
 	    verbose -log "Couldn't execute $prog, [lindex $status 1]" 3

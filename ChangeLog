@@ -1,3 +1,8 @@
+2014-07-01  Maxim Kuvyrkov  <maxim.kuvyrkov@linaro.org>
+
+	* config/unix.exp (unix_load): If remote_sim is set in the board
+	file, prepend it before executable prog name.
+
 2014-06-26  Rob Savoye  <rob.savoye@linaro.org>
 
 	* aclocal.m4, Makefile.in, configure: Regenerated with automake
