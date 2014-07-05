@@ -20,7 +20,6 @@
 # Connect to HOSTNAME using rsh or ssh(1).
 #
 proc rsh_open { hostname } {
-    puts "FIXME: rsh_open: $hostname"
     global spawn_id
 
     set tries 0
@@ -147,7 +146,6 @@ proc rsh_open { hostname } {
 # Download SRCFILE to DESTFILE on DESTHOST.
 #
 proc rsh_download {desthost srcfile destfile} {
-    puts "FIXME: rsh_download: $desthost $srcfile $destfile"
 
     # must be done before desthost is rewritten
     if {[board_info $desthost exists rcp_prog]} {
@@ -231,8 +229,6 @@ proc rsh_upload {desthost srcfile destfile} {
 # Execute CMD on BOARDNAME.
 #
 proc rsh_exec { boardname program pargs inp outp } {
-    puts "FIXME: rsh_exec: $boardname $program $pargs $inp"
-
     global timeout
 
     verbose "Executing $boardname:$program $pargs < $inp"
