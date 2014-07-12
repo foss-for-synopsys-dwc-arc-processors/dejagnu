@@ -1,3 +1,8 @@
+2014-07-11  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/dmucs.exp (gethost): New file. Add support for the dmucs
+	gethost command.
+
 2014-07-01  Maxim Kuvyrkov  <maxim.kuvyrkov@linaro.org>
 
 	* config/unix.exp (unix_load): If remote_sim is set in the board
