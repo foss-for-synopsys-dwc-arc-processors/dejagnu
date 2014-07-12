@@ -2,6 +2,8 @@
 
 	* lib/dmucs.exp (gethost): New file. Add support for the dmucs
 	gethost command.
+	* Makefilea.am: Install lib/dmucs.exp.
+	* Makefile.in: Regenerated.
 
 2014-07-01  Maxim Kuvyrkov  <maxim.kuvyrkov@linaro.org>
 
