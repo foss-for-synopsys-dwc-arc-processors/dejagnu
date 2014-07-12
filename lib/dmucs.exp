@@ -31,18 +31,20 @@ proc gethost { server arch } {
 	set server "localhost";
     }
     set slave ""
-#    gethost -s $server -D 2>&1 | grep ^tmp | cut -d '=' -f2 | cut -d '/' -f 1
     # gethost in debug mode returns this output:
     #
     # Writing -->host 127.0.1.1 <-- to the server
     # Calling Sgets
     # Got -->10.6.1.24<-- from the server
     # tmp is -->DISTCC_HOSTS=10.6.1.24/100<--
+    # --node and --arch are unique to the linaro branch of dmucs
     spawn gethost -s $server --node --arch $arch
     expect {
+	# We only get this string when gethost is run in debug mode
 	"Got -->*<-- from the server" {
 	    puts "FIXME: $expect_out(buffer)"
 	}
+	# This is the IP number we want.
 	"^\[0-9\]*.\[0-9\]*.\[0-9\]*.\[0-9\]*" {
 	    set pos [expr { [string first "/"  $expect_out(buffer)] - 1}]
 	    set slave [string range $expect_out(buffer) 0 $pos]
