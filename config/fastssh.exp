@@ -1,0 +1,94 @@
+# Copyright (C) 2014 Free Software Foundation, Inc.
+#
+# This file is part of DejaGnu.
+#
+# DejaGnu is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# DejaGnu is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DejaGnu; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+set default_opts "-o ControlMaster=auto -o ControlPath=/tmp/cbuild-%u@%h:[pid]"
+set ssh_initialized ""
+
+set_board_info protocol fastssh
+
+set_board_info rsh_prog /usr/bin/ssh
+set_board_info rcp_prog /usr/bin/scp
+
+proc fastssh_init { args } {
+    global default_opts
+     verbose "FIXME: fastssh_init"
+}
+
+#
+# Connect to hostname using ssh
+#
+proc fastssh_open { hostname } {
+    global default_opts
+    global logname
+    verbose "FIXME: fastssh_open $hostname $srcfile $destfile"
+
+#    set_board_info rsh_opts "$default_opts -o Controlpersist=6h"
+
+    if { [glob "/tmp/ssh-$logname*@$hostname*"] != ""} {
+	rsh_open $hostname
+    }
+}
+
+#
+# Download $srcfile to $destfile on $desthost.
+#
+
+proc fastssh_download {desthost srcfile destfile} {
+    global default_opts ssh_initialized logname RSH
+    verbose "FIXME: fastssh_download $desthost $srcfile $destfile"
+
+    set opts $default_opts
+
+    if { $ssh_initialized == "" } {
+	if { [glob -nocomplain "/tmp/ssh-$logname*@$desthost*"] != ""} {
+	    verbose "FIXME: fastssh_download socket exists!"
+	} else {
+#	    set RSH "$RSH $default_opts"
+	    set ssh_initialized "yes"
+	    verbose "FIXME: fastssh_download socket doesn't exist!"
+	}
+    }
+    
+    return [rsh_download $desthost $srcfile $destfile]
+}
+
+proc fastssh_upload {desthost srcfile destfile} {
+    global default_opts
+}
+
+#
+# Execute "$cmd $args[0]" on $boardname.
+#
+proc fastssh_exec { boardname cmd args } {
+    global default_opts ssh_initialized
+    verbose "FIXME: fastssh_exec $boardname $cmd $args"
+
+    lappend args "$default_opts"
+
+    return [rsh_exec $boardname $cmd $args "" ""]
+}
+
+proc fastssh_close { dest } {
+    global default_opts ssh_initialized timeout
+    verbose "FIXME: fastssh_close $dest $default_opts"
+
+    # Kill the remote server
+    if { $ssh_initialized == "yes" } {
+	return [local_exec "ssh \"$default_opts\" -O exit $dest" "" "" $timeout]
+    }
+}
