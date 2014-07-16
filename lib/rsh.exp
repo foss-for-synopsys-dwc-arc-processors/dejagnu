@@ -146,7 +146,6 @@ proc rsh_open { hostname } {
 # Download SRCFILE to DESTFILE on DESTHOST.
 #
 proc rsh_download {desthost srcfile destfile} {
-
     # must be done before desthost is rewritten
     if {[board_info $desthost exists rcp_prog]} {
 	set RCP [board_info $desthost rcp_prog]
@@ -168,8 +167,12 @@ proc rsh_download {desthost srcfile destfile} {
 	set rsh_useropts "-l [board_info $desthost username]"
 	set rcp_user "[board_info $desthost username]@"
     } else {
-	set rsh_useropts ""
 	set rcp_user ""
+	set rsh_useropts ""
+    }
+
+    if {[board_info $desthost exists rsh_opts]} {
+	append rsh_useropts "[board_info $desthost rsh_opts]"
     }
 
     if {[board_info $desthost exists port]} {
@@ -184,7 +187,8 @@ proc rsh_download {desthost srcfile destfile} {
 	set desthost [board_info $desthost hostname]
     }
 
-    set status [catch "exec $RSH $rsh_useropts $desthost rm -f $destfile |& cat" output]
+    # rm has no output, which causes problems with ssh using ControlMaster
+    set status [catch "exec $RSH $rsh_useropts $desthost rm -f $destfile |& ''" output]
     set status [catch "exec $RCP $srcfile $rcp_user$desthost:$destfile |& cat" output]
     if { $status == 0 } {
 	verbose "Copied $srcfile to $desthost:$destfile" 2
@@ -230,6 +234,7 @@ proc rsh_upload {desthost srcfile destfile} {
 #
 proc rsh_exec { boardname program pargs inp outp } {
     global timeout
+    global RSH
 
     verbose "Executing $boardname:$program $pargs < $inp"
 
@@ -247,6 +252,10 @@ proc rsh_exec { boardname program pargs inp outp } {
 	set rsh_useropts "-l [board_info $boardname username]"
     } else {
 	set rsh_useropts ""
+    }
+
+    if {[board_info $boardname exists rsh_opts]} {
+	append rsh_useropts " [board_info $boardname rsh_opts]"
     }
 
     if {[board_info $boardname exists name]} {
