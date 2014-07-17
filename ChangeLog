@@ -1,3 +1,20 @@
+2014-07-16  Rob Savoye  <rob.savoye@linaro.org>
+
+	* runtest.exp: Make the "Searching for" message only printed for
+	verbosity over 1. Too much noise.
+
+	* lib/rsh.exp: Also look for rsh_opts in board_info. Don't use cat
+	for rsh_exec as it hangs with ControlMaster, and rm -f has no
+	output anyway, so we don't care.
+
+2014-07-15  Rob Savoye  <rob.savoye@linaro.org>
+
+	* config/fastssh.exp: Wrapper for rsh.exp that uses ControlMaster
+	and ControlPath to mutiplex SSH connections. It's a config file
+	instead of a library or baseboard as only config files execute the
+	_close proc, which we use to delete the SSH socket to prevent
+	trouble.
+
 2014-07-11  Rob Savoye  <rob.savoye@linaro.org>
 
 	* lib/dmucs.exp (gethost): New file. Add support for the dmucs
