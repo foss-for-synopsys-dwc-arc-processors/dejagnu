@@ -30,7 +30,7 @@ proc ${board}_download { dest file args } {
     global model timeout
 
     # Extract the endianess of the executable
-    set bigendian "[local_exec "od -An -v -j5 -N1 -t x1 $file" "" "" $timeout]"
+    set status [catch "exec od -An -v -j5 -N1 -t x1 $file" bigendian]
     set args "--quiet"
     if { $bigendian == "02"} {
      	set args "$args --big-endian"
@@ -44,3 +44,4 @@ proc ${board}_exec { dest file args } {
     # This is a stub, since we can't execute remote commands on bare metal
     return 0
 }
+
