@@ -5,6 +5,8 @@
 	(fastssh_open): Change directory to /tmp here, so it's only done
 	once per session. Yes, this assumes all downloads are going in
 	/tmp.
+	(fastssh_download): ook for Bytes Sent during a transfer, to avoid
+	bogus timeouts.
 
 2014-08-04  Rob Savoye  <rob.savoye@linaro.org>
 
