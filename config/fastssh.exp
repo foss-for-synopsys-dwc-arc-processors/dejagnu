@@ -157,7 +157,7 @@ proc fastssh_download {desthost srcfile destfile} {
     send -i $spawn_id "\004"
     while { $tries <= 3 } {
 	expect {
-	   "*zssh > *" {
+ 	   "*zssh > *" {
 	       verbose "Got ZSSH prompt for console"
 	       set result 0
 	       break
@@ -183,8 +183,8 @@ proc fastssh_download {desthost srcfile destfile} {
 
 
     set result -1
+    send -i $spawn_id "sz $destfile\r\n"
     while { $tries <= 3 } {
-	send -i $spawn_id "sz $destfile\r\n"
 	expect {
 	    -timeout $timeout
 	    "*Transfer complete" {
@@ -196,6 +196,7 @@ proc fastssh_download {desthost srcfile destfile} {
 		verbose "Couldn't Transfer $srcfile"
 		send -i $spawn_id "\r\n"
 		set result -1
+		break
 	    }
 	    "*zssh > *" {
 		verbose "Got ZSSH prompt after sz"
@@ -268,11 +269,9 @@ proc fastssh_exec { boardname cmd args } {
 		break
 	    }
 	    "$boardname:*/tmp" {
-		verbose "Got hostname $expect_out(buffer)" 
-		set outout "XYZ0ZYX"
+#		verbose "Got hostname $expect_out(buffer)" 
 		set result 0
-#		exp_continue
-		break
+		exp_continue
 	    }
 	    timeout {
 		warning "$ZSSH: timed out trying to connect."
