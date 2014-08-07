@@ -2,6 +2,9 @@
 
 	* config/fastssh.exp: Use zssh instead of ssh, so files can be
 	downloaded.
+	(fastssh_open): Change directory to /tmp here, so it's only done
+	once per session. Yes, this assumes all downloads are going in
+	/tmp.
 
 2014-08-04  Rob Savoye  <rob.savoye@linaro.org>
 
