@@ -233,9 +233,9 @@ proc fastssh_exec { boardname cmd args } {
 
     send -i $spawn_id "$cmd && echo XYZ0ZYX\r\n"
     set tries 0
-    set result -1
-    set output ""
     while { $tries <= 3 } {
+	set result -1
+	set output ""
 	expect {
 	    -timeout $timeout
 	    # "\[0-9\]*" {
@@ -261,15 +261,20 @@ proc fastssh_exec { boardname cmd args } {
 	    }
 	    "$boardname:*/tmp" {
 #		verbose "Got hostname $expect_out(buffer)" 
-		set result 0
+#		set result 0
 		exp_continue
 	    }
 	    timeout {
-		warning "$ZSSH: timed out trying to connect."
+		warning "$ZSSH: timed out waiting for output
+		send -i $spawn_id "\r\n"
+		set output ""
+		set result -1
 		break
 	    }
 	    eof {
 		perror "$ZSSH: got EOF while trying to connect."
+		set output ""
+		set result -1
 		break
 	    }
 	}
