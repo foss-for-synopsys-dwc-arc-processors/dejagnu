@@ -21,7 +21,7 @@ set ssh_initialized ""
 # This only works with ZSSH
 set ZSSH /usr/bin/zssh
 set shell_prompt "(^|\[\r\n\])\[^\r\n\]*\$"
-set timeout 100
+set timeout 30
 
 #
 # Connect to hostname using ssh
@@ -192,6 +192,9 @@ proc fastssh_download {desthost srcfile destfile} {
 		set result 0
 		break
 	    }
+	    "*Bytes Sent*" {
+		exp_continue
+	    }
 	    "*Transfer incomplete" {
 		verbose "Couldn't Transfer $srcfile"
 		send -i $spawn_id "\r\n"
@@ -258,7 +261,7 @@ proc fastssh_exec { boardname cmd args } {
 		exp_continue
 	    }
 	    "*$cmd" {
-		verbose "Executed command $cmd $args" 
+#		verbose "Executed command $cmd $args" 
 		set outout "$expect_out(buffer)"
 		exp_continue
 	    }
