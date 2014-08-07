@@ -21,7 +21,7 @@ set ssh_initialized ""
 # This only works with ZSSH
 set ZSSH /usr/bin/zssh
 set shell_prompt "(^|\[\r\n\])\[^\r\n\]*\$"
-set timeout 60
+set timeout 100
 
 #
 # Connect to hostname using ssh
@@ -90,6 +90,39 @@ proc fastssh_open { hostname } {
 	incr tries
     }
 
+    set tries 0
+    set result -1
+    # FIXME: cd /tmp should be cd [dirname $destfile]
+    send -i $spawn_id "cd /tmp\n"
+    while { $tries <= 3 } {
+    	expect {
+    	    -timeout $timeout
+	    "*$hostname:*" {
+    		verbose "Got remote prompt"
+		# flush buffers
+		break
+	    }
+    	    "*/tmp\r\n*" {
+    		verbose "Changed remote directory to /tmp"
+    		set result 0
+    		exp_continue
+    	    }
+    	    timeout {
+    		warning "$ZSSH: timed out trying to connect."
+    		break
+    	    }
+    	    eof {
+    		perror "$ZSSH: got EOF while trying to connect."
+    		break
+    	    }
+    	}
+    	incr tries
+    }
+    # empty buffers
+    expect {
+	"*" {}
+    }
+
 #    if { $result < 0 } {
 #	catch close -i $spawn_id
 #	set spawn_id -1
@@ -121,46 +154,9 @@ proc fastssh_download {desthost srcfile destfile} {
 
     set tries 0
     set result -1
-    # FIXME: cd /tmp should be cd [dirname $destfile]
-    send -i $spawn_id "cd /tmp\n"
-    while { $tries <= 3 } {
-    	expect {
-    	    -timeout $timeout
-	    "*$desthost:*" {
-    		verbose "Got remote prompt"
-		# flush buffers
-		break
-	    }
-    	    "*/tmp\r\n*" {
-    		verbose "Changed remote directory to /tmp"
-    		set result 0
-    		exp_continue
-    	    }
-    	    timeout {
-    		warning "$ZSSH: timed out trying to connect."
-    		break
-    	    }
-    	    eof {
-    		perror "$ZSSH: got EOF while trying to connect."
-    		break
-    	    }
-    	}
-    	incr tries
-    }
-    # empty buffers
-    expect {
-	"*" {}
-    }
-
-    set tries 0
-    set result -1
     send -i $spawn_id "\004"
     while { $tries <= 3 } {
 	expect {
-	"*:/tmp*" {
-	    verbose "Changed remote directory to /tmp"
-	    exp_continue
-	   }
 	   "*zssh > *" {
 	       verbose "Got ZSSH prompt for console"
 	       set result 0
@@ -184,6 +180,8 @@ proc fastssh_download {desthost srcfile destfile} {
     }
 
     set tries 0
+
+
     set result -1
     while { $tries <= 3 } {
 	send -i $spawn_id "sz $destfile\r\n"
@@ -196,6 +194,7 @@ proc fastssh_download {desthost srcfile destfile} {
 	    }
 	    "*Transfer incomplete" {
 		verbose "Couldn't Transfer $srcfile"
+		send -i $spawn_id "\r\n"
 		set result -1
 	    }
 	    "*zssh > *" {
@@ -240,35 +239,39 @@ proc fastssh_exec { boardname cmd args } {
     global spawn_id ssh_initialized shell_prompt timeout ZSSH
 #    verbose "FIXME: fastssh_exec $boardname $cmd $args"
 
-    send -i $spawn_id "$cmd $args && echo XYZ0ZYX\r\n"
+    send -i $spawn_id "$cmd && echo XYZ0ZYX\r\n"
     set tries 0
     set result -1
     set output ""
     while { $tries <= 3 } {
 	expect {
 	    -timeout $timeout
-	    "\[0-9]]*" {
-		set outout "$expect_out(buffer)"
-		verbose "Got status from remote shell $expect_out(buffer)"
-		set result 0
-		break
-	    }
-	    -re "XYZ(\[0-9\]*)ZYX\n?" {
-		verbose "Executed $expect_out(buffer) and got output" 
-		set outout "$expect_out(buffer)"
+	    # "\[0-9\]*" {
+	    # 	set outout "$expect_out(buffer)"
+	    # 	verbose "Got status from remote shell $expect_out(buffer)"
+	    # 	set result 0
+	    # 	break
+	    # }
+	    -re "echo XYZ(\[0-9\]*)ZYX\n?" {
+#		verbose "Executed $expect_out(buffer) and got echo" 
 		exp_continue
-		set result 0
-		break
 	    }
 	    "*$cmd" {
-		verbose "Executed $cmd" 
+		verbose "Executed command $cmd $args" 
 		set outout "$expect_out(buffer)"
 		exp_continue
+	    }
+	    -re "\r\nXYZ(\[0-9\]*)ZYX\r\n?" {
+		verbose "Executed $cmd and got good output" 
+		set outout "$expect_out(buffer)"
+		set result 0
+		break
 	    }
 	    "$boardname:*/tmp" {
 		verbose "Got hostname $expect_out(buffer)" 
 		set outout "XYZ0ZYX"
 		set result 0
+#		exp_continue
 		break
 	    }
 	    timeout {
