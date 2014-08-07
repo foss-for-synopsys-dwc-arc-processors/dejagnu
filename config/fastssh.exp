@@ -21,7 +21,7 @@ set ssh_initialized ""
 # This only works with ZSSH
 set ZSSH /usr/bin/zssh
 set shell_prompt "(^|\[\r\n\])\[^\r\n\]*\$"
-set timeout 30
+set timeout 60
 
 #
 # Connect to hostname using ssh
@@ -31,7 +31,7 @@ proc fastssh_open { hostname } {
     global logname ssh_initialized
     global spawn_id shell_prompt
     global timeout
-    verbose "FIXME: fastssh_open $hostname"
+#    verbose "FIXME: fastssh_open $hostname"
 
     if { [glob -nocomplain "/tmp/cbuild-$logname*@$hostname*"] != ""} {
 	verbose "FIXME: fastssh_download socket exists!"
@@ -109,14 +109,14 @@ proc fastssh_download {desthost srcfile destfile} {
     global logname ssh_initialized
     global spawn_id shell_prompt
     global ZSSH timeout
-    verbose "FIXME: fastssh_download $desthost $srcfile $destfile"
+#    verbose "FIXME: fastssh_download $desthost $srcfile $destfile"
 
     if { $ssh_initialized == "" } {
 	set $ssh_initialized "[ fastssh_open $desthost ]"
     }
 
-    verbose "FIXME2: fastssh_download $ssh_initialized"
-
+    # Since sz can't specify an output file, we have to make a
+    # copy with the correct name.
     set ret [local_exec "cp -f $srcfile $destfile" "" "" $timeout]
 
     set tries 0
@@ -185,19 +185,23 @@ proc fastssh_download {desthost srcfile destfile} {
 
     set tries 0
     set result -1
-    send -i $spawn_id "sz $destfile\r\n"
     while { $tries <= 3 } {
+	send -i $spawn_id "sz $destfile\r\n"
 	expect {
-	    -timeout 60
+	    -timeout $timeout
 	    "*Transfer complete" {
 		verbose "Transferred $srcfile"
-	       set result 0
-	       break
+		set result 0
+		break
 	    }
-	   "*zssh > *" {
-	       verbose "Got ZSSH prompt after sz"
-	       set result 0
-	       break
+	    "*Transfer incomplete" {
+		verbose "Couldn't Transfer $srcfile"
+		set result -1
+	    }
+	    "*zssh > *" {
+		verbose "Got ZSSH prompt after sz"
+		set result 0
+		break
 	    }
 	    timeout {
 		warning "$ZSSH: timed out trying to connect."
@@ -221,7 +225,7 @@ proc fastssh_download {desthost srcfile destfile} {
     if { $result == 0 } {
         return $destfile
     } else {
-        verbose "Download to $desthost failed, $output."
+        verbose "Download to $desthost failed"
         return ""
     }
 }
@@ -234,9 +238,9 @@ proc fastssh_upload {desthost srcfile destfile} {
 #
 proc fastssh_exec { boardname cmd args } {
     global spawn_id ssh_initialized shell_prompt timeout ZSSH
-    verbose "FIXME: fastssh_exec $boardname $cmd $args"
+#    verbose "FIXME: fastssh_exec $boardname $cmd $args"
 
-    send -i $spawn_id "$cmd $args ; echo XYZ0ZYX\r\n"
+    send -i $spawn_id "$cmd $args && echo XYZ0ZYX\r\n"
     set tries 0
     set result -1
     set output ""
@@ -244,24 +248,27 @@ proc fastssh_exec { boardname cmd args } {
 	expect {
 	    -timeout $timeout
 	    "\[0-9]]*" {
+		set outout "$expect_out(buffer)"
 		verbose "Got status from remote shell $expect_out(buffer)"
+		set result 0
 		break
 	    }
 	    -re "XYZ(\[0-9\]*)ZYX\n?" {
 		verbose "Executed $expect_out(buffer) and got output" 
 		set outout "$expect_out(buffer)"
 		exp_continue
+		set result 0
 		break
 	    }
 	    "*$cmd" {
-		verbose "Executed $expect_out(buffer)" 
+		verbose "Executed $cmd" 
 		set outout "$expect_out(buffer)"
 		exp_continue
-#		break
 	    }
 	    "$boardname:*/tmp" {
 		verbose "Got hostname $expect_out(buffer)" 
 		set outout "XYZ0ZYX"
+		set result 0
 		break
 	    }
 	    timeout {
@@ -276,18 +283,18 @@ proc fastssh_exec { boardname cmd args } {
 	incr tries
     }
 
-    return [list "0" "$output"]
+    return [list "$result" "$output"]
 }
 
 proc fastssh_close { dest } {
     global ZSSH
-    verbose "FIXME: fastssh_close: $dest"
+#    verbose "FIXME: fastssh_close: $dest"
 
     # Kill the remote server
-    set status [catch "exec ssh -O exit $dest" output]
-    if { $status == 0 } {
-	return $dest
-    } else {
-	return ""
-    }
+#   set status [catch "exec ssh -O exit $dest" output]
+#   if { $status == 0 } {
+#	return $dest
+#    } else {
+#	return ""
+#    }
 }
