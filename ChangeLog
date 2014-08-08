@@ -1,3 +1,9 @@
+2014-08-08  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/ssh.exp: Fork rsh.exp into an SSH only version, leaving
+	rsh.exp for now till people switch over. This uses ControlMaster
+	and ControlPersist for better performance.
+
 2014-08-06  Rob Savoye  <rob.savoye@linaro.org>
 
 	* config/fastssh.exp: Use zssh instead of ssh, so files can be
