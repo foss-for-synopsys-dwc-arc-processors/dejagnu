@@ -1,3 +1,13 @@
+2014-08-26  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/rsh.exp: Set RSH and RCP globally.
+	* lib/ssh.exp: Minor cleanup.
+	* Makefile.am: Install new SSH and Docker library files.
+	* Makefile.in: Regenerated.
+	* baseboards/arm-linux.exp: Use new SSH protocol.
+	* config/aarch64-fv8.exp: Set the timeout to 6000.
+	* lib/remote.exp: Load ssh.exp.
+
 2014-08-08  Rob Savoye  <rob.savoye@linaro.org>
 
 	* lib/ssh.exp: Fork rsh.exp into an SSH only version, leaving
