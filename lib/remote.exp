@@ -26,6 +26,7 @@ load_lib "rlogin.exp"
 load_lib "kermit.exp"
 load_lib "tip.exp"
 load_lib "rsh.exp"
+load_lib "ssh.exp"
 load_lib "ftp.exp"
 load_lib "lava-tool.exp"
 
@@ -569,6 +570,7 @@ proc call_remote { type proc dest args } {
 	}
 	return $result
     }
+
     foreach try "${high_prot} [board_info $dest file_transfer] [board_info $dest connect] telnet standard" {
 	verbose "looking for ${try}_${proc}" 4
 	if { $try != "" } {
