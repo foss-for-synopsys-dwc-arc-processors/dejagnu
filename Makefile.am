@@ -41,6 +41,7 @@ pkgdata_DATA = \
   runtest.exp \
   lib/debugger.exp \
   lib/dejagnu.exp \
+  lib/docker.exp \
   lib/dmucs.exp \
   lib/dg.exp \
   lib/framework.exp \
@@ -51,6 +52,7 @@ pkgdata_DATA = \
   lib/remote.exp \
   lib/rlogin.exp \
   lib/rsh.exp \
+  lib/ssh.exp \
   lib/standard.exp \
   lib/target.exp \
   lib/targetdb.exp \
@@ -62,6 +64,7 @@ configdir = $(pkgdatadir)/config
 config_DATA = \
 	config/README \
 	config/aarch64-fv8.exp \
+	config/fastssh.exp \
 	config/adb.exp \
 	config/arc.exp \
 	config/arm-ice.exp \
