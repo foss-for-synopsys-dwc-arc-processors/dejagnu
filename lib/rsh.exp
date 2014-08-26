@@ -19,8 +19,15 @@
 
 # Connect to HOSTNAME using rsh or ssh(1).
 #
+
+set rsh_initialized "no"
+
+set RSH rsh
+set RCP rcp
+
 proc rsh_open { hostname } {
-    global spawn_id
+    global spawn_id rsh_initialized
+    global RSH
 
     set tries 0
     set result -1
@@ -28,8 +35,6 @@ proc rsh_open { hostname } {
     if {![board_info $hostname exists rsh_prog]} {
 	if { [which remsh] != 0 } {
 	    set RSH remsh
-	} else {
-	    set RSH rsh
 	}
     } else {
 	set RSH [board_info $hostname rsh_prog]
@@ -134,7 +139,7 @@ proc rsh_open { hostname } {
     }
 
     if { $result < 0 } {
-	close -i $spawn_id
+	catch close -i $spawn_id
 	set spawn_id -1
     } else {
 	set board_info($hostname,fileid) $spawn_id
@@ -146,11 +151,11 @@ proc rsh_open { hostname } {
 # Download SRCFILE to DESTFILE on DESTHOST.
 #
 proc rsh_download {desthost srcfile destfile} {
+    global RSH RCP rsh_initialized
+
     # must be done before desthost is rewritten
     if {[board_info $desthost exists rcp_prog]} {
 	set RCP [board_info $desthost rcp_prog]
-    } else {
-	set RCP rcp
     }
 
     if {[board_info $desthost exists rsh_prog]} {
@@ -158,8 +163,6 @@ proc rsh_download {desthost srcfile destfile} {
     } else {
 	if { [which remsh] != 0 } {
 	    set RSH remsh
-	} else {
-	    set RSH rsh
 	}
     }
 
@@ -172,11 +175,15 @@ proc rsh_download {desthost srcfile destfile} {
     }
 
     if {[board_info $desthost exists rsh_opts]} {
-	append rsh_useropts "[board_info $desthost rsh_opts]"
+	append rsh_useropts " [board_info $desthost rsh_opts]"
     }
 
     if {[board_info $desthost exists port]} {
-	append rsh_useropts " -P [board_info $desthost port]"
+	set rsh_port " -p [board_info $desthost port]"
+	set rcp_port " -P [board_info $desthost port]"
+    } else {
+	set rsh_port ""
+	set rcp_port ""
     }
 
     if {[board_info $desthost exists name]} {
@@ -187,9 +194,13 @@ proc rsh_download {desthost srcfile destfile} {
 	set desthost [board_info $desthost hostname]
     }
 
+    append rsh_useropts " -o ControlPersist=6h -o ControlMaster=auto -o ControlPath=\"~/.ssh/master-%r@%h:%p\""
+
+#    verbose "FIXME1: rsh_download $RSH $rsh_port $rsh_useropts $rcp_user$desthost rm -f $destfile"
     # rm has no output, which causes problems with ssh using ControlMaster
-    set status [catch "exec $RSH $rsh_useropts $desthost rm -f $destfile |& ''" output]
-    set status [catch "exec $RCP $srcfile $rcp_user$desthost:$destfile |& cat" output]
+    set status [catch "exec $RSH $rsh_port $rsh_useropts $rcp_user$desthost rm -f $destfile |& ''" output]
+#    verbose "FIXME2: rsh_download $RCP $rcp_port $srcfile $rsh_useropts $rcp_user$desthost:$destfile"
+    set status [catch "exec $RCP $rcp_port $srcfile $rcp_user$desthost:$destfile |& cat" output]
     if { $status == 0 } {
 	verbose "Copied $srcfile to $desthost:$destfile" 2
 	return $destfile
@@ -200,6 +211,7 @@ proc rsh_download {desthost srcfile destfile} {
 }
 
 proc rsh_upload {desthost srcfile destfile} {
+    global RCP
     if {[board_info $desthost exists rcp_prog]} {
 	set RCP [board_info $desthost rcp_prog]
     } else {
@@ -234,7 +246,6 @@ proc rsh_upload {desthost srcfile destfile} {
 #
 proc rsh_exec { boardname program pargs inp outp } {
     global timeout
-    global RSH
 
     verbose "Executing $boardname:$program $pargs < $inp"
 
@@ -266,6 +277,10 @@ proc rsh_exec { boardname program pargs inp outp } {
 	set hostname [board_info $boardname hostname]
     } else {
 	set hostname $boardname
+    }
+
+    if {[board_info $boardname  exists port]} {
+	append rsh_useropts " -p [board_info $boardname port]"
     }
 
     # If CMD sends any output to stderr, exec will think it failed.
