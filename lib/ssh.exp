@@ -17,7 +17,7 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
-# Connect to HOSTNAME using rsh or ssh(1).
+# Connect to HOSTNAME using ssh(1).
 #
 
 set ssh_initialized "no"
@@ -30,11 +30,16 @@ set SCP scp
 #
 proc ssh_download {desthost srcfile destfile} {
     global SSH SCP ssh_initialized timeout
+
     set ssh_port ""
     set scp_port ""
     set ssh_user ""
     set name ""
     set hostname ""
+
+#    if { $ssh_initialized == "no" } {
+#	ssh_close $desthost
+#    }
 
     if {[board_info $desthost exists rcp_prog]} {
 	set SCP [board_info $desthost rcp_prog]
@@ -78,9 +83,10 @@ proc ssh_download {desthost srcfile destfile} {
     set status [catch "exec $SCP $scp_port $srcfile $ssh_user$hostname:$destfile |& cat" output]
     if { $status == 0 } {
 	verbose "Copied $srcfile to $desthost:$destfile" 2
+	set ssh_initialized "yes"
 	return $destfile
     } else {
-	verbose "Download to $desthost failed, $output."
+	verbose "Download via ssh to $desthost failed, $output."
 	return ""
     }
 }
@@ -118,11 +124,9 @@ proc ssh_upload {desthost srcfile destfile} {
 # Execute CMD on BOARDNAME.
 #
 proc ssh_exec { boardname program pargs inp outp } {
-    global timeout
-    global SSH SCP
+    global SSH timeout
 
-#    verbose "FIXME: ssh_exec $SSH $boardname:$program $pargs"
-    verbose "Executing $boardname:$program $pargs < $inp"
+    verbose "Executing $boardname:$program $pargs"
 
     if {![board_info $boardname exists ssh_prog]} {
 	set SSH ssh
@@ -189,8 +193,7 @@ proc ssh_exec { boardname program pargs inp outp } {
 }
 
 proc ssh_close { desthost } {
-    global SSHssh_initialized
-#    verbose "FIXME: ssh_close $desthost"
+    global SSH ssh_initialized
 
     if {[board_info $desthost exists username]} {
 	set ssh_useropts "-l [board_info $desthost username]"
@@ -218,7 +221,7 @@ proc ssh_close { desthost } {
 
    # Kill the remote server
     set status [catch "exec ssh $ssh_port -o ControlPath=~/.ssh/master-%r@%h:%p -O exit $args"]
-    set ssh_initialized "n"
+    set ssh_initialized "no"
 
      return ""
 }
