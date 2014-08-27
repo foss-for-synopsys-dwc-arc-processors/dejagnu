@@ -76,7 +76,7 @@ proc ssh_download {desthost srcfile destfile} {
 	set hostname $desthost
     }
 
-    append ssh_useropts " -o ControlPersist=6h -o ControlMaster=auto -o ControlPath=\"~/.ssh/master-%r@%h:%p\""
+    append ssh_useropts " -o ControlPersist=yes -o ControlMaster=auto -o ControlPath=\"~/.ssh/master-%r@%h:%p\""
 
     # rm has no output, which causes problems with ssh using ControlMaster
     set status [catch "exec $SSH $ssh_port $ssh_useropts $ssh_user$hostname rm -f $destfile |& ''" output]
