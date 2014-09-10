@@ -33,7 +33,7 @@ proc ${board}_download { dest file args } {
     set status [catch "exec od -An -v -j5 -N1 -t x1 $file" bigendian]
     set args "--quiet"
     if { $bigendian == "02"} {
-     	set args "$args --big-endian"
+     	set args "$args --bigendian"
     }
     
     return [local_exec "$model --image $file $args" "" "" $timeout]
