@@ -21,6 +21,7 @@
 #
 
 set ssh_initialized "no"
+set ssh_useropts " -o ControlPersist=yes -o ControlMaster=auto -o ControlPath=\"/tmp/ssh-%r@%h:%p\""
 
 # Default to the ssh and scp in the users path.
 set SSH ssh
@@ -32,8 +33,8 @@ proc ssh_download {desthost srcfile destfile} {
     global SSH SCP ssh_initialized timeout
 
     set ssh_port ""
-    set scp_port ""
     set ssh_user ""
+    set ssh_useropts ""
     set name ""
     set hostname ""
 
@@ -41,8 +42,8 @@ proc ssh_download {desthost srcfile destfile} {
 #	ssh_close $desthost
 #    }
 
-    if {[board_info $desthost exists rcp_prog]} {
-	set SCP [board_info $desthost rcp_prog]
+    if {[board_info $desthost exists scp_prog]} {
+	set SCP [board_info $desthost scp_prog]
     }
 
     if {[board_info $desthost exists ssh_prog]} {
@@ -58,12 +59,11 @@ proc ssh_download {desthost srcfile destfile} {
 	append ssh_useropts " [board_info $desthost ssh_opts]"
     }
 
-    # Unfortunately SSH uses a lower case -p for the option, while SCP uses upper case.
     # The default SSH port is 22
     if {[board_info $desthost exists port]} {
-	set ssh_port " -p [board_info $desthost port]"
-	set scp_port " -P [board_info $desthost port]"
+	set ssh_port "[board_info $desthost port]"
     } else {
+	set ssh_port 22
     }
 
     if {[board_info $desthost exists name]} {
@@ -76,23 +76,24 @@ proc ssh_download {desthost srcfile destfile} {
 	set hostname $desthost
     }
 
-    append ssh_useropts " -o ControlPersist=yes -o ControlMaster=auto -o ControlPath=\"~/.ssh/master-%r@%h:%p\""
+    append ssh_useropts " -o ControlPersist=yes -o ControlMaster=auto -o ControlPath=/tmp/ssh-%r@%h:%p"
 
-    # rm has no output, which causes problems with ssh using ControlMaster
-    set status [catch "exec $SSH $ssh_port $ssh_useropts $ssh_user$hostname rm -f $destfile |& ''" output]
-    set status [catch "exec $SCP $scp_port $srcfile $ssh_user$hostname:$destfile |& cat" output]
+    set ret [local_exec "$SCP -P $ssh_port $ssh_useropts $srcfile $ssh_user$hostname:$destfile" "" "" $timeout]
+    set status [lindex $ret 0]
+    set output [lindex $ret 1]
     if { $status == 0 } {
-	verbose "Copied $srcfile to $desthost:$destfile" 2
 	set ssh_initialized "yes"
+	verbose "Copied $srcfile to $desthost:$destfile" 2
 	return $destfile
     } else {
-	verbose "Download via ssh to $desthost failed, $output."
+	verbose "Download via ssh to $desthost failed."
 	return ""
     }
 }
 
 proc ssh_upload {desthost srcfile destfile} {
     global SSH SCP
+
     if {[board_info $desthost exists scp_prog]} {
 	set SCP [board_info $desthost scp_prog]
     }
@@ -126,6 +127,13 @@ proc ssh_upload {desthost srcfile destfile} {
 proc ssh_exec { boardname program pargs inp outp } {
     global SSH timeout
 
+    set ssh_port ""
+    set scp_port ""
+    set ssh_user ""
+    set ssh_useropts ""
+    set name ""
+    set hostname ""
+
     verbose "Executing $boardname:$program $pargs"
 
     if {![board_info $boardname exists ssh_prog]} {
@@ -135,12 +143,12 @@ proc ssh_exec { boardname program pargs inp outp } {
     }
 
     if {[board_info $boardname exists username]} {
-	set ssh_useropts "-l [board_info $boardname username]"
+	set ssh_user "[board_info $boardname username]@"
     } else {
-	set ssh_useropts ""
+	set ssh_user ""
     }
 
-    if {[board_info $boardname exists ssh_opts]} {
+    if {[board_info $boardname exists ssh_useropts]} {
 	append ssh_useropts " [board_info $boardname ssh_opts]"
     }
 
@@ -158,6 +166,8 @@ proc ssh_exec { boardname program pargs inp outp } {
 	append ssh_useropts " -p [board_info $boardname port]"
     }
 
+    append ssh_useropts " -o ControlPersist=yes -o ControlMaster=auto -o ControlPath=\"/tmp/ssh-%r@%h:%p\""
+
     # If CMD sends any output to stderr, exec will think it failed.
     # More often than not that will be true, but it doesn't catch the
     # case where there is no output but the exit code is non-zero.
@@ -165,7 +175,9 @@ proc ssh_exec { boardname program pargs inp outp } {
 	set inp "/dev/null"
     }
 
-    set ret [local_exec "$SSH $ssh_useropts $hostname sh -c '$program $pargs \\; echo XYZ\\\${?}ZYX'" $inp $outp $timeout]
+    # We use && here, as otherwise the echo always works, which makes it look
+    # like execution succeeded when in reality it failed.
+    set ret [local_exec "$SSH $ssh_useropts $ssh_user$hostname sh -c '$program $pargs && echo XYZ\\\${?}ZYX \\; rm -f $program'" $inp $outp $timeout]
     set status [lindex $ret 0]
     set output [lindex $ret 1]
 
@@ -195,6 +207,15 @@ proc ssh_exec { boardname program pargs inp outp } {
 proc ssh_close { desthost } {
     global SSH ssh_initialized
 
+    verbose "Closing the SSH connection to $desthost"
+    
+    set ssh_port ""
+    set scp_port ""
+    set ssh_user ""
+    set ssh_useropts ""
+    set name ""
+    set hostname ""
+
     if {[board_info $desthost exists username]} {
 	set ssh_useropts "-l [board_info $desthost username]"
 	set ssh_user "[board_info $desthost username]@"
@@ -220,7 +241,7 @@ proc ssh_close { desthost } {
     set args "$ssh_user$hostname $ssh_port"
 
    # Kill the remote server
-    set status [catch "exec ssh $ssh_port -o ControlPath=~/.ssh/master-%r@%h:%p -O exit $args"]
+    set status [catch "exec ssh $ssh_port -o ControlPath=/tmp/ssh-%r@%h:%p -O exit $args"]
     set ssh_initialized "no"
 
      return ""
