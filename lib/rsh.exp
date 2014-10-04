@@ -194,12 +194,8 @@ proc rsh_download {desthost srcfile destfile} {
 	set desthost [board_info $desthost hostname]
     }
 
-    append rsh_useropts " -o ControlPersist=6h -o ControlMaster=auto -o ControlPath=\"~/.ssh/master-%r@%h:%p\""
-
-#    verbose "FIXME1: rsh_download $RSH $rsh_port $rsh_useropts $rcp_user$desthost rm -f $destfile"
     # rm has no output, which causes problems with ssh using ControlMaster
     set status [catch "exec $RSH $rsh_port $rsh_useropts $rcp_user$desthost rm -f $destfile |& ''" output]
-#    verbose "FIXME2: rsh_download $RCP $rcp_port $srcfile $rsh_useropts $rcp_user$desthost:$destfile"
     set status [catch "exec $RCP $rcp_port $srcfile $rcp_user$desthost:$destfile |& cat" output]
     if { $status == 0 } {
 	verbose "Copied $srcfile to $desthost:$destfile" 2
