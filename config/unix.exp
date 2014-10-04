@@ -18,8 +18,6 @@
 # along with DejaGnu; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 
-# This file was written by Rob Savoye <rob@welcomehome.org>.
-
 if {![info exists board]} {
     error "must set $board before loading unix.exp"
 }
@@ -87,6 +85,13 @@ proc unix_load { dest prog args } {
 	    set output [lindex $status 1]
 	    set status [lindex $status 0]
 	}
+
+	# Don't try to execute a data file, which is used by some tests
+	# to compare output.
+	if {[regexp "^\.txt$" ${program}]} {
+	    return ""
+	}
+
 	# Unset them so we don't potentially get hosed when we try to run a
 	# non-testcase executable. (Setting LD_LIBRARY_PATH is the wrong
 	# fix in the first place; this just tries to minimize the resulting
@@ -115,23 +120,7 @@ proc unix_load { dest prog args } {
 	    verbose -log "Download of $prog to [board_info $dest name] failed." 3
 	    return [list "unresolved" ""]
 	}
-	if {[board_info $dest exists remote_link]} {
-	    if {[[board_info $dest remote_link] $remotefile]} {
-		verbose -log "Couldn't do remote link"
-		remote_exec $dest "\\rm -f $remotefile"
-		return [list "unresolved" ""]
-	    }
 
-	    verbose "$prog linked ok" 3
-	} else {
-	    # rcp's to lynx seem not to get marked executable
-	    set status [remote_exec $dest "chmod +x $remotefile"]
-	    if { [lindex $status 0] != 0 } {
-		remote_file $dest delete ${remotefile}.o $remotefile
-		verbose -log "chmod +x of $prog on $dest failed." 3
-		return [list "unresolved" ""]
-	    }
-	}
 	if {[board_info $dest exists remote_sim]} {
 	    set status [remote_exec $dest "[board_info $dest remote_sim] $remotefile" $parg $inp]
 	} else {
@@ -161,4 +150,4 @@ proc unix_load { dest prog args } {
     return [list $result $output]
 }
 
-set_board_info protocol  "unix"
+#set_board_info protocol  "unix"

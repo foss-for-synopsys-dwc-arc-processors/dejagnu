@@ -1,3 +1,10 @@
+2014-10-04  Rob Savoye  <rob.savoye@linaro.org>
+
+	* config/unix.exp (unix_load): Remove extra commands used for
+	Lynx, which is a dead OS to reduce the time for each test
+	case. Also don't try to execute a data file, as text files are
+	used to compare output from some test cases.
+
 2014-09-29  Rob Savoye  <rob.savoye@linaro.org>
 
 	* lib/ssh.exp: major improvements to use persistent connections.
