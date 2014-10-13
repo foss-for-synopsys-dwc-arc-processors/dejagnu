@@ -243,6 +243,11 @@ proc rsh_upload {desthost srcfile destfile} {
 proc rsh_exec { boardname program pargs inp outp } {
     global timeout
 
+    # Don't try to execute a data file
+    if {[regexp "^\.txt$" ${program}]} {
+	return ""
+    }
+
     verbose "Executing $boardname:$program $pargs < $inp"
 
     if {![board_info $boardname exists rsh_prog]} {
@@ -269,6 +274,12 @@ proc rsh_exec { boardname program pargs inp outp } {
 	set boardname [board_info $boardname name]
     }
 
+    if {[board_info $boardname exists timeout]} {
+	set exec_timeout [board_info $boardname timeout]
+    } else {
+	set exec_timeout $timeout
+    }
+
     if {[board_info $boardname exists hostname]} {
 	set hostname [board_info $boardname hostname]
     } else {
@@ -286,7 +297,7 @@ proc rsh_exec { boardname program pargs inp outp } {
 	set inp "/dev/null"
     }
 
-    set ret [local_exec "$RSH $rsh_useropts $hostname sh -c '$program $pargs \\; echo XYZ\\\${?}ZYX'" $inp $outp $timeout]
+    set ret [local_exec "$RSH $rsh_useropts $hostname sh -c '$program $pargs \\; echo XYZ\\\${?}ZYX'" $inp $outp $exec_timeout]
     set status [lindex $ret 0]
     set output [lindex $ret 1]
 
