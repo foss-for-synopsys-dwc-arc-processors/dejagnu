@@ -88,7 +88,7 @@ proc unix_load { dest prog args } {
 
 	# Don't try to execute a data file, which is used by some tests
 	# to compare output.
-	if {[regexp "^\.txt$" ${program}]} {
+	if {[regexp "^\.txt$" $prog]} {
 	    return ""
 	}
 
