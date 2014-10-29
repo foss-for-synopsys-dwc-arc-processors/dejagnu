@@ -244,7 +244,7 @@ proc rsh_exec { boardname program pargs inp outp } {
     global timeout
 
     # Don't try to execute a data file
-    if {[regexp "^\.txt$" ${program}]} {
+    if {[regexp "^\.txt$" $program]} {
 	return ""
     }
 
