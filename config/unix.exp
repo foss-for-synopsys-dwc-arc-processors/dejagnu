@@ -150,4 +150,4 @@ proc unix_load { dest prog args } {
     return [list $result $output]
 }
 
-#set_board_info protocol  "unix"
+set_board_info protocol  "unix"
