@@ -1,161 +1,92 @@
-2014-10-04  Rob Savoye  <rob.savoye@linaro.org>
+2015-04-17  Rob Savoye  <rob.savoye@linaro.org>
 
-	* config/unix.exp (unix_load): Remove extra commands used for
-	Lynx, which is a dead OS to reduce the time for each test
-	case. Also don't try to execute a data file, as text files are
-	used to compare output from some test cases.
+	* lib/libgloss.exp (find_g++): Look for xg++ before g++.
 
-2014-09-29  Rob Savoye  <rob.savoye@linaro.org>
+2015-03-30  Ben Elliston  <bje@gnu.org>
 
-	* lib/ssh.exp: major improvements to use persistent connections.
+	Revert the following change which causes breakage reported here:
+	https://lists.gnu.org/archive/html/dejagnu/2015-03/msg00003.html
 
-2014-09-10  Rob Savoye  <rob.savoye@linaro.org>
+	2011-03-14  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
-	* config/aarch64-fv8.exp: Fix big endian flag to the model.
+	* runtest.exp (runtest): Call reset_vars at initialisation so that
+	perror does not affect test results in other test scripts.
 
-2014-08-26  Rob Savoye  <rob.savoye@linaro.org>
+2015-02-26  H.J. Lu  <hjl.tools@gmail.com>
 
-	* lib/rsh.exp: Set RSH and RCP globally.
-	* lib/ssh.exp: Minor cleanup.
-	* Makefile.am: Install new SSH and Docker library files.
-	* Makefile.in: Regenerated.
-	* baseboardS/arm-linux.exp: Use new SSH protocol.
-	* config/aarch64-fv8.exp: Set the timeout to 6000.
-	* lib/remote.exp: Load ssh.exp.
+	* lib/target.exp (default_target_compile): Prepend multilib_flags,
+	instead of appending it.
 
-2014-08-08  Rob Savoye  <rob.savoye@linaro.org>
+2015-02-18  Ben Elliston  <bje@gnu.org>
 
-	* lib/ssh.exp: Fork rsh.exp into an SSH only version, leaving
-	rsh.exp for now till people switch over. This uses ControlMaster
-	and ControlPersist for better performance.
+	* lib/framework.exp (log_and_exit): Set tool to "testrun" if
+	unset.
 
-2014-08-06  Rob Savoye  <rob.savoye@linaro.org>
+2015-02-05  Ben Elliston  <bje@gnu.org>
 
-	* config/fastssh.exp: Use zssh instead of ssh, so files can be
-	downloaded.
-	(fastssh_open): Change directory to /tmp here, so it's only done
-	once per session. Yes, this assumes all downloads are going in
-	/tmp.
-	(fastssh_download): ook for Bytes Sent during a transfer, to avoid
-	bogus timeouts.
+	* doc/runtest.1: Fix a spelling error.
 
-2014-08-04  Rob Savoye  <rob.savoye@linaro.org>
+2015-02-04  Ben Elliston  <bje@gnu.org>
 
-	* config/aarch64-fv8.exp: Use the Tcl exec instead of local_exec,
-	which keeps messing up the output of od. This fixes the endian
-	test.
+	* config.guess: Update to version 2015-01-01.
+	* config.sub: Likewise.
 
-2014-07-16  Rob Savoye  <rob.savoye@linaro.org>
+2015-01-22  Eric Botcazou  <ebotcazou@adacore.com>
 
-	* runtest.exp: Make the "Searching for" message only printed for
-	verbosity over 1. Too much noise.
+	* Makefile.am (baseboard_DATA): Add baseboards/visium-sim.exp.
+	* Makefile.in: Regenerate.
+	* baseboards/visium-sim.exp: New file.
 
-	* lib/rsh.exp: Also look for rsh_opts in board_info. Don't use cat
-	for rsh_exec as it hangs with ControlMaster, and rm -f has no
-	output anyway, so we don't care.
+2014-11-25  Ben Elliston  <bje@gnu.org>
 
-2014-07-15  Rob Savoye  <rob.savoye@linaro.org>
+	* lib/dejagnu.exp (host_execute): Remove stray leading hyphen.
+	Reported by David Malcolm.
 
-	* config/fastssh.exp: Wrapper for rsh.exp that uses ControlMaster
-	and ControlPath to mutiplex SSH connections. It's a config file
-	instead of a library or baseboard as only config files execute the
-	_close proc, which we use to delete the SSH socket to prevent
-	trouble.
+2014-10-28  Ben Elliston  <bje@gnu.org>
 
-2014-07-11  Rob Savoye  <rob.savoye@linaro.org>
+	* Makefile.in: Regenerate.
 
-	* lib/dmucs.exp (gethost): New file. Add support for the dmucs
-	gethost command.
-	* Makefilea.am: Install lib/dmucs.exp.
-	* Makefile.in: Regenerated.
+2014-10-28  Ben Elliston  <bje@gnu.org>
 
-2014-07-01  Maxim Kuvyrkov  <maxim.kuvyrkov@linaro.org>
+	* example: Remove stale examples.
 
-	* config/unix.exp (unix_load): If remote_sim is set in the board
-	file, prepend it before executable prog name.
+2014-10-24  Steve Ellcey  <sellcey@mips.com>
 
-2014-06-26  Rob Savoye  <rob.savoye@linaro.org>
+	* dejagnu.h (pass): Make function static as well as inline.
+	(xpass): Ditto.
+	(fail): Ditto.
+	(xfail): Ditto.
+	(untested): Ditto.
+	(unresolved): Ditto.
+	(note): Ditto.
+	(totals): Ditto.
 
-	* aclocal.m4, Makefile.in, configure: Regenerated with automake
-	1.14.1, autoconf 2.69.
+2014-10-14  Ben Elliston  <bje@gnu.org>
 
-2014-06-25  Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
+	* runtest.exp: Only match $directory, not *${directory}* when the
+	user passes the --directory option. Reported by Sergey Alyoshin.
 
-	* config/unix.exp: Add new proc make_absolute, and if shared_dir
-	is in the board file, use that for executing the test.
+2014-10-14  Ben Elliston  <bje@gnu.org>
+
+	* lib/dejagnu.exp (host_execute): Remove buffer_full check. This
+	is not the right command keyword -- it is full_buffer. Reported by
+	David Malcolm.
+
+2014-07-15  Maciej W. Rozycki  <macro@mips.com>
+	    Maciej W. Rozycki  <macro@codesourcery.com>
+
+	* lib/targetdb.exp (add_board_info): New procedure.
+	* doc/ref.xml (Add_board_info Procedure): New section.
+	(Set_board_info Procedure): Add description.
+	(Unset_board_info Procedure): Likewise.
+	* doc/user.xml (Board Config File Values): Add `add_board_info'
+	reference.  Reorder `gdb_init_command' table rows and remove a
+	duplicate entry, reusing it for `gdb_init_commands'.
 
 2014-06-25  Rob Savoye  <rob.savoye@linaro.org>
 
-	* runtest.exp: (lookfor-file): Fix bug were none of the releative
+	* runtest.exp: (lookfor-file): Fix bug were none of the relative
 	paths were actually being used for file lookup.
-
-2014-06-24  Rob Savoye  <rob.savoye@linaro.org>
-
-	* config/aarch64-fv8.exp: Fix big-endian test. LE is 01, BE is 02.
-
-2014-06-24  Rob Savoye  <rob.savoye@linaro.org>
-
-	* config/aarch64-fv8.exp: New config file for using the ARM
-	Foundation Model for aarch64.
-
-	* Makefile.am: Install config/aarchfv8.exp.
-	* Makefie.in: regenerated.
-
-2014-05-03  Rob Savoye  <rob.savoye@linaro.org>
-
-	* config/lava.exp ${board}_init: Parse the output file from LAVA
-	for the SSH connection info we need (user@ip & hostname).
-
-2014-05-02  Rob Savoye  <rob.savoye@linaro.org>
-
-	* lib/remote.exp: Load lib/lava-too.exp on startup.
-
-	* Makefile.am: Install lib/lava-tool.exp and config/lava.json.
-	* Makefie.in: regenerated.
-
-	* lib/lava-tool.exp (lava_json): Parse the input template and do
-	substitutions of keywords to produce the proper JSON file.
-
-	* config/lava.json: Add a template for the JSON file LAVA
-	needs. This later has substitutions made based on the board file.
-
-	* lib/lava-tool.exp: Add support for using lava-tool to control
-	remote LAVA build slaves.
-
-2014-02-17  Rob Savoye  <rob.savoye@linaro.org>
-
-	* lib/rsh.exp: Fix typo, use $desthost instead of $hostname when
-	retrieving the port number for SSH.
-
-2013-11-28  Rob Savoye  <rob.savoye@linaro.org>
-
-	* INSTALL, depcomp, install-sh, missing, mkinstalldirs: Updated
-	utility files to Automake 1.13.3.
-
-2013-11-25  Rob Savoye  <rob.savoye@linaro.org>
-
-	* Makefile.am (baseboard_DATA): Remove the Linaro specific board
-	files, they now live elsewhere.
-	* configure, aclocl.m4, Makefile.in: Regenerated.
-	* baseboards/arm-linux.exp: Remove bogus hostname setting.
-
-	* arm-chromebook.exp arm-odroidU2.exp arm-odroidXU.exp: Moved to
-	Cbuildv2 tool, as they're Linaro TCWG build farm specific.
-
-2013-10-25  Rob Savoye  <rob.savoye@linaro.org>
-
-	* lib/rsh.exp (rsh_open, rsh_download): Process a port option so
-	ssh and scp can use a custom port.
-	* baseboards/aarch64-fv8.exp: ARM Foundation Model (simulator)
-	support for aarch64. (arm64)
-
-2013-10-24  Rob Savoye  <rob.savoye@linaro.org>
-
-	* baseboards/arm-linux.exp: Base file for ARM based Linux
-	targets.
-	* baseboards/arm-odroidU2.exp: Odroid U2 board support.
-	* baseboards/arm-odroidXU.exp: Odroid XU board support.
-	* baseboards/arm-chromebook.exp: ARM based Chromebook support.
 
 2014-06-06  Ben Elliston  <bje@gnu.org>
 
@@ -213,7 +144,6 @@
        (adb_load): Add the possibility to change the temp directory. Also
        handle permission potential problems.
        (adb_exec): Do cd to android_tmp_dir first.
->>>>>>> master
 
 2013-10-05  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
