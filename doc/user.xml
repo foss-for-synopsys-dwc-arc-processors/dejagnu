@@ -690,9 +690,9 @@ set_board_info ftp_password    "1234"
 </sect3>
 
 <sect3>
-<title>Preparing for crosscompilation</title>
+<title>Preparing for cross-compilation</title>
 
-<para>For crosscompiling you need working binutils, gcc and a base library like
+<para>For cross-compilation you need working binutils, gcc and a base library like
 libc or glib for your target.
 It is beyond the scope of this document to describe how to get it working.
 The following examples assume a cross compiler for PowerPC which is called linux-powerpc-gcc.
@@ -964,7 +964,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 	  affects <emphasis>only</emphasis> &dj; procedures that compare the
 	  host string with particular values.  The procedures
 	  <emphasis>ishost</emphasis>, <emphasis>istarget</emphasis>,
-	  <emphasis>isnative</emphasis>, and <emphasis>setup</emphasis>xfail}
+	  <emphasis>isnative</emphasis>, and <emphasis>setup_xfail</emphasis>
 	  are affected by <option>--host</option>. In this usage,
 	  <emphasis>host</emphasis> refers to the machine that the tests are to
 	  be run on, which may not be the same as the
@@ -998,7 +998,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 	  <filename>dbg.log</filename>. The extra debugging output does
 	  <emphasis>not</emphasis> appear on standard output, unless the
 	  verbose level is greater than 2 (for instance, to see debug output
-	  immediately, specify <option>--debug</option>-v -v}). The
+	  immediately, specify <option>--debug -v -v</option>). The
 	  debugging output shows all attempts at matching the test output of
 	  the tool with the scripted patterns describing expected output.  The
 	  output generated with <option>--strace</option> also goes into
@@ -1030,14 +1030,22 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
         <varlistentry>
           <term><option>--outdir [path]</option></term>
 	  <listitem><para>Write output logs in directory
-	  <filename>path</filename>.  The default is <emphasis>.},
-	  the</emphasis> directory where you start
-	  <emphasis>runtest</emphasis>. This option affects only the summary
-	  and the detailed log files
+	  <filename>path</filename>.  The default is <emphasis>.</emphasis>,
+	  the directory where you start <emphasis>runtest</emphasis>. This
+	  option affects only the summary and the detailed log files
 	  <filename>tool.sum</filename> and
 	  <filename>tool.log</filename>. The &dj; debug
 	  log <filename>dbg.log</filename> always appears (when requested) in
 	  the local directory.</para></listitem>
+	</varlistentry>
+
+        <varlistentry>
+          <term><option>--log_dialog</option></term>
+	  <listitem><para>Emit Expect output to stdout.
+	  The <emphasis>expect</emphasis> output is usually only written to
+	  <filename>tool.log</filename>. By enabling this option, they are also
+	  be printed to the stdout of the <emphasis>runtest</emphasis>
+	  invocation.</para></listitem>
 	</varlistentry>
 
         <varlistentry>
@@ -1055,7 +1063,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 	  for test scripts to run. <emphasis>runtest</emphasis> looks in this
 	  directory for any subdirectory whose name begins with the toolname
 	  (specified with <option>--tool</option>). For instance, with
-	  <option>--tool</option>gdb}, <emphasis>runtest</emphasis> uses
+	  <option>--tool gdb</option>, <emphasis>runtest</emphasis> uses
 	  tests in subdirectories <filename>gdb.*</filename> (with the usual
 	  shell-like filename expansion).  If you do not use
 	  <option>--srcdir</option>, <emphasis>runtest</emphasis> looks for
@@ -1145,7 +1153,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
           <term><option>--verbose</option> (-v)</term>
 	  <listitem><para>Turns on more output. Repeating this option increases
           the amount of output displayed. Level one (<emphasis>-v</emphasis>)
-          is simply test output. Level two (<emphasis>-v</emphasis>-v}) shows
+          is simply test output. Level two (<emphasis>-v -v</emphasis>) shows
           messages on options, configuration, and process control.  Verbose
           messages appear in the detailed (<filename>*.log</filename>) log
           file, but not in the summary (<filename>*.sum</filename>) log
@@ -2388,7 +2396,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 
       <para>Usually the best way to write a new initialization module is to
       edit an existing initialization module; some trial and error will be
-      required. If necessary, you can use the @samp{--debug} option to see what
+      required. If necessary, you can use the <option>--debug</option> option to see what
       is really going on.</para>
 
       <para>When you code an initialization module, be generous in printing
@@ -2505,10 +2513,11 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
     <sect2 id="boarddefs" xreflabel="Board File Values">
       <title>Board Config File Values</title>
 
-      <para>These fields are all in the <symbol>board_info</symbol> These are
-      all set by using the <function>set_board_info</function> procedure. The
-      parameters are the field name, followed by the value to set the field
-      to.</para>
+      <para>These fields are all in the <symbol>board_info</symbol> array.
+      These are all set by using the <function>set_board_info</function>
+      and <function>add_board_info</function> procedures as required. The
+      parameters are the field name, followed by the value that the field
+      is set to or is added to the field, respectively.</para>
 
 	<table frame="all" rowsep="0" colsep="0">
 	  <title>Common Board Info Fields</title>
@@ -2667,11 +2676,6 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 	  </row>
 
 	  <row>
-	    <entry>gdb_init_command</entry>
-	    <entry>"set mipsfpu none"</entry>
-	  </row>
-
-	  <row>
 	    <entry>gdb,cannot_call_functions</entry>
 	    <entry>1</entry>
 	    <entry>Whether GDB can call functions on the target,</entry>
@@ -2714,7 +2718,16 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 
 	  <row>
 	    <entry>gdb_init_command</entry>
+	    <entry>"set mipsfpu none"</entry>
+	    <entry>A single command to send to GDB before the program being
+	    debugged is started.</entry>
+	  </row>
+
+	  <row>
+	    <entry>gdb_init_commands</entry>
 	    <entry>"print/x \$fsr = 0x0"</entry>
+	    <entry>Same as <emphasis>gdb_init_command</emphasis>, except
+	    that this is a list, more commands can be added.</entry>
 	  </row>
 
 	  <row>
@@ -3079,7 +3092,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
           <varlistentry>
             <term>$prms_id</term>
 	    <listitem><para>The tracking system (e.g. GNATS) number identifying
-	    a corresponding bugreport.  (<emphasis>0</emphasis>} if you do not
+	    a corresponding bugreport.  (<emphasis>0</emphasis> if you do not
 	    specify it in the test script.)</para></listitem>
           </varlistentry>
 

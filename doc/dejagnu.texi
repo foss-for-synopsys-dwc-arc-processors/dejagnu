@@ -128,16 +128,16 @@ or tool. Each program can have multiple testsuites, all
 supported by a single test harness. DejaGnu is written in
 Expect, which in turn uses
 Tcl -- Tool command
-language. There is more information on Tcl at the @uref{http://www.scriptics.com,Scriptics} web site and the
+language. There is more information on Tcl at the @uref{http://www.tcl.tk,Tcl/Tk} web site and the
 Expect web site is at @uref{http://expect.nist.gov,NIST}.
 
 Julia Menapace first coined the term ``DejaGnu'' to describe
 an earlier testing framework at Cygnus Support she had written
 for @code{GDB}. When we replaced it with the
 Expect-based framework, it was like DejaGnu all over again.
-More importantly, it was also named after my daughter, @uref{http://www.welcomehome.org/deja/,Deja Snow Savoye}
-(now 14 years old as of Feb 2004), who was a toddler
-during DejaGnu's beginnings.
+More importantly, it was also named after my daughter, Deja
+Snow Savoye, who was a toddler during DejaGnu's
+beginnings.
 
 DejaGnu offers several advantages for testing:
 
@@ -429,7 +429,7 @@ monitor.
 DejaGnu uses the same output procedures to produce these messages
 for all testsuites and these procedures are already known to conform
 to POSIX 1003.3.  For a DejaGnu testsuite to conform to POSIX 1003.3,
-you must avoid the @emph{setup}xfail@} procedure as
+you must avoid the @emph{setup_xfail} procedure as
 described in the @emph{PASS} section above and you must
 be careful to return @emph{UNRESOLVED} where appropriate,
 as described in the @emph{UNRESOLVED} section
@@ -955,7 +955,7 @@ Before you can test calc on a remote target you have to acquire a few basics ski
 * A test case for login via telnet::
 * Remote testing "Hello world"::
 * Transferring files from/to the target::
-* Preparing for crosscompilation::
+* Preparing for cross-compilation::
 * Remote testing of calc::
 * Using Windows as host and vxWorks as target::
 @end menu
@@ -1128,7 +1128,7 @@ set_board_info hostname        "powerbook"
 
 Now call runtest again with the same arguments and verify whether all went okay by taking a close look at calc.log.
 
-@node Transferring files from/to the target, Preparing for crosscompilation, Remote testing "Hello world", A first remote test
+@node Transferring files from/to the target, Preparing for cross-compilation, Remote testing "Hello world", A first remote test
 @subsection Transferring files from/to the target
 
 A simple procedure like this will do the job for you:
@@ -1167,10 +1167,10 @@ set_board_info ftp_username    "dgt"
 set_board_info ftp_password    "1234"
 @end example
 
-@node Preparing for crosscompilation, Remote testing of calc, Transferring files from/to the target, A first remote test
-@subsection Preparing for crosscompilation
+@node Preparing for cross-compilation, Remote testing of calc, Transferring files from/to the target, A first remote test
+@subsection Preparing for cross-compilation
 
-For crosscompiling you need working binutils, gcc and a base library like
+For cross-compilation you need working binutils, gcc and a base library like
 libc or glib for your target.
 It is beyond the scope of this document to describe how to get it working.
 The following examples assume a cross compiler for PowerPC which is called linux-powerpc-gcc.
@@ -1225,7 +1225,7 @@ powerpc-linux-gcc -g -O2 -o calc calc.o
 
 @end example
 
-@node Remote testing of calc, Using Windows as host and vxWorks as target, Preparing for crosscompilation, A first remote test
+@node Remote testing of calc, Using Windows as host and vxWorks as target, Preparing for cross-compilation, A first remote test
 @subsection Remote testing of calc
 
 Not yet written, as I have problem getting libc6-dev-powerpc to work. Probably I first have to build my cross compiler. 
@@ -1427,7 +1427,7 @@ anything is actually configured unless --build is also specified; it
 affects @emph{only} DejaGnu procedures that compare the
 host string with particular values.  The procedures
 @emph{ishost}, @emph{istarget},
-@emph{isnative}, and @emph{setup}xfail@}
+@emph{isnative}, and @emph{setup_xfail}
 are affected by @code{--host}. In this usage,
 @emph{host} refers to the machine that the tests are to
 be run on, which may not be the same as the
@@ -1455,7 +1455,7 @@ debugging output. Debugging output is displayed as part of the
 @file{dbg.log}. The extra debugging output does
 @emph{not} appear on standard output, unless the
 verbose level is greater than 2 (for instance, to see debug output
-immediately, specify @code{--debug}-v -v@}). The
+immediately, specify @code{--debug -v -v}). The
 debugging output shows all attempts at matching the test output of
 the tool with the scripted patterns describing expected output.  The
 output generated with @code{--strace} also goes into
@@ -1479,14 +1479,20 @@ code.  You can normally prepare any auxiliary files needed with
 
 @item @code{--outdir [path]}
 Write output logs in directory
-@file{path}.  The default is @emph{.@},
-the} directory where you start
-@emph{runtest}. This option affects only the summary
-and the detailed log files
+@file{path}.  The default is @emph{.},
+the directory where you start @emph{runtest}. This
+option affects only the summary and the detailed log files
 @file{tool.sum} and
 @file{tool.log}. The DejaGnu debug
 log @file{dbg.log} always appears (when requested) in
 the local directory.
+
+@item @code{--log_dialog}
+Emit Expect output to stdout.
+The @emph{expect} output is usually only written to
+@file{tool.log}. By enabling this option, they are also
+be printed to the stdout of the @emph{runtest}
+invocation.
 
 @item @code{--reboot [name]}
 Reboot the target board when
@@ -1500,7 +1506,7 @@ Use @file{path} as the top directory
 for test scripts to run. @emph{runtest} looks in this
 directory for any subdirectory whose name begins with the toolname
 (specified with @code{--tool}). For instance, with
-@code{--tool}gdb@}, @emph{runtest} uses
+@code{--tool gdb}, @emph{runtest} uses
 tests in subdirectories @file{gdb.*} (with the usual
 shell-like filename expansion).  If you do not use
 @code{--srcdir}, @emph{runtest} looks for
@@ -1574,7 +1580,7 @@ tool.
 @item @code{--verbose} (-v)
 Turns on more output. Repeating this option increases
 the amount of output displayed. Level one (@emph{-v})
-is simply test output. Level two (@emph{-v}-v@}) shows
+is simply test output. Level two (@emph{-v -v}) shows
 messages on options, configuration, and process control.  Verbose
 messages appear in the detailed (@file{*.log}) log
 file, but not in the summary (@file{*.sum}) log
@@ -2758,7 +2764,7 @@ DejaGnu itself to remain target independent.
 
 Usually the best way to write a new initialization module is to
 edit an existing initialization module; some trial and error will be
-required. If necessary, you can use the @@samp@{--debug@} option to see what
+required. If necessary, you can use the @code{--debug} option to see what
 is really going on.
 
 When you code an initialization module, be generous in printing
@@ -2871,10 +2877,11 @@ procedures are the ones in square braces
 @node Board File Values, Writing A Test Case, Adding A New Board, Extending DejaGnu
 @section Board Config File Values
 
-These fields are all in the @code{board_info} These are
-all set by using the @code{set_board_info} procedure. The
-parameters are the field name, followed by the value to set the field
-to.
+These fields are all in the @code{board_info} array.
+These are all set by using the @code{set_board_info}
+and @code{add_board_info} procedures as required. The
+parameters are the field name, followed by the value that the field
+is set to or is added to the field, respectively.
 
 @strong{Common Board Info Fields}
 
@@ -2937,8 +2944,6 @@ gdb_sect_offset@tab "0x41000000";@tab
 @item
 gdb_stub_ldscript@tab "-Wl,-Teva-stub.ld"@tab The linker script to use with a GDB stub.
 @item
-gdb_init_command@tab "set mipsfpu none"@tab 
-@item
 gdb,cannot_call_functions@tab 1@tab Whether GDB can call functions on the target,
 @item
 gdb,noargs@tab 1@tab Whether the target can take command line arguments.
@@ -2953,7 +2958,11 @@ gdb,target_sim_options@tab "-sparclite"@tab Special options to pass to the simul
 @item
 gdb,timeout@tab 540@tab Timeout value to use for remote communication.
 @item
-gdb_init_command@tab "print/x \$fsr = 0x0"@tab 
+gdb_init_command@tab "set mipsfpu none"@tab A single command to send to GDB before the program being
+debugged is started.
+@item
+gdb_init_commands@tab "print/x \$fsr = 0x0"@tab Same as @emph{gdb_init_command}, except
+that this is a list, more commands can be added.
 @item
 gdb_load_offset@tab "0x12020000"@tab 
 @item
@@ -3253,7 +3262,7 @@ but they should never be changed.
 
 @item $prms_id
 The tracking system (e.g. GNATS) number identifying
-a corresponding bugreport.  (@emph{0}@} if you do not
+a corresponding bugreport.  (@emph{0} if you do not
 specify it in the test script.)
 
 @item $item bug_id
@@ -3379,10 +3388,10 @@ You may also want to use the @code{configure} option
 supporting code installed.  By default, installation is in subdirectories
 of @file{/usr/local}, but you can select any alternate
 directory @code{altdir} by including
-@code{--prefix}@{altdir@}@} on the
+@code{--prefix altdir} on the
 @code{configure} command line. (This value is captured in
 the Makefile variables @emph{prefix} and
-@emph{exec}prefix@}.)
+@emph{exec_prefix}.)
 
 Save for a small number of example tests, the DejaGnu distribution
 itself does not include any testsuites; these are available
@@ -5828,6 +5837,7 @@ download.
 * Board_info Procedure: board_info procedure.
 * Host_info Procedure: host_info procedure.
 * Set_board_info Procedure: set_board_info procedure.
+* Add_board_info Procedure: add_board_info procedure.
 * Set_currtarget_info Procedure: set_currtarget_info procedure.
 * Target_info Procedure: target_info procedure.
 * Unset_board_info Procedure: unset_board_info procedure.
@@ -5880,9 +5890,12 @@ download.
 @item @code{args}
 @end table
 
-@node set_board_info procedure, set_currtarget_info procedure, host_info procedure, target database library file
+@node set_board_info procedure, add_board_info procedure, host_info procedure, target database library file
 @subsubsection Set_board_info Procedure
 
+This checks if @code{board_info} array's field
+@emph{entry} has been set already and if not, then
+sets it to @emph{value}.
 
 @quotation
 
@@ -5893,11 +5906,37 @@ download.
 @table @asis
 
 @item @code{entry}
+The name of a @code{board_info} field
+to operate on.
 
 @item @code{value}
+The value to set the field to.
 @end table
 
-@node set_currtarget_info procedure, target_info procedure, set_board_info procedure, target database library file
+@node add_board_info procedure, set_currtarget_info procedure, set_board_info procedure, target database library file
+@subsubsection Add_board_info Procedure
+
+This treats @code{board_info} array's field
+@emph{entry} as a TCL list and adds
+@emph{value} at the end.
+
+@quotation
+
+@t{@b{add_board_info}(@i{entry}
+@i{value});}
+@end quotation
+
+@table @asis
+
+@item @code{entry}
+The name of a @code{board_info} field
+to operate on.
+
+@item @code{value}
+The value to add to the field.
+@end table
+
+@node set_currtarget_info procedure, target_info procedure, add_board_info procedure, target database library file
 @subsubsection Set_currtarget_info Procedure
 
 
@@ -5934,6 +5973,9 @@ download.
 @node unset_board_info procedure, unset_currtarget_info procedure, target_info procedure, target database library file
 @subsubsection Unset_board_info Procedure
 
+This checks if @code{board_info} array's field
+@emph{entry} has been set and if so, then removes
+it.
 
 @quotation
 
@@ -5943,6 +5985,8 @@ download.
 @table @asis
 
 @item @code{entry}
+The name of a @code{board_info} field
+to operate on.
 @end table
 
 @node unset_currtarget_info procedure, push_target procedure, unset_board_info procedure, target database library file
@@ -6131,7 +6175,7 @@ procedures, @code{$@{tool@}_exit} and
 arguments.
 
 The other two procedures, @code{$@{tool@}_start}
-and @code{$@{tool@}_load}@}, are only called by the test
+and @code{$@{tool@}_load}, are only called by the test
 suites themselves (or by testsuite-specific initialization
 code); they may take arguments  or not, depending on the
 conventions used within each testsuite.

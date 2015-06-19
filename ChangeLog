@@ -2,6 +2,51 @@
 
 	* lib/libgloss.exp (find_g++): Look for xg++ before g++.
 
+2015-05-23  Ben Elliston  <bje@gnu.org>
+
+	* doc/dejagnu.xml: Fix broken URLs.
+	* doc/dejagnu.texi: Regenerate.
+
+2015-05-23  Ben Elliston  <bje@gnu.org>
+
+	* doc/user.xml: Fix 'crosscompilation'.
+
+2015-05-23  Ben Elliston  <bje@gnu.org>
+
+	* doc/runtest.1 (log_dialog): Improve documentation.
+
+2015-05-16  Filipe Brandenburger  <filbranden@google.com>
+
+	* configure.ac: Enable subdir-objects, require automake 1.14.
+	* Makefile.in: Regenerate.
+
+2015-05-15  Filipe Brandenburger  <filbranden@google.com>
+
+	* doc/dejagnu.xml: Fix typos such as stray }'s and @samp{...},
+	possibly introduced in a conversion of .texi to SGML Docbook.
+	* doc/user.xml: Likewise.
+	* doc/ref.xml: Likewise.
+	* doc/dejagnu.texi: Regenerate.
+
+2015-05-15  Filipe Brandenburger  <filbranden@google.com>
+
+	* runtest.exp (runtest): Introduce new --log_dialog option.
+	* doc/runtest.1: Document it.
+	* doc/user.xml: Likewise.
+	* doc/dejagnu.texi: Regenerate.
+
+2015-05-14  Steve Ellcey  <sellcey@imgtec.com>
+
+	* baseboards/multi-sim.exp (get_library_dirlist): New.
+	(dynamic_linker_flag): Use get_library_dirlist to find dynamic
+	linker.
+	(rpath_flags): Use get_library_dirlist to set rpath.
+
+2015-05-12  Steve Ellcey  <sellcey@imgtec.com>
+
+	* baseboards/generic-sim.exp: Check $DEJAGNU_SIM_OPTION.
+>>>>>>> master
+
 2015-03-30  Ben Elliston  <bje@gnu.org>
 
 	Revert the following change which causes breakage reported here:
