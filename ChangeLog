@@ -1,6 +1,7 @@
-2015-04-17  Rob Savoye  <rob.savoye@linaro.org>
+2015-07-30  Pedro Alves  <palves@redhat.com>
 
-	* lib/libgloss.exp (find_g++): Look for xg++ before g++.
+	* lib/remote.exp (close_wait_program): New procedure.
+	(local_exec, standard_close): Use it.
 
 2015-05-23  Ben Elliston  <bje@gnu.org>
 
@@ -45,7 +46,10 @@
 2015-05-12  Steve Ellcey  <sellcey@imgtec.com>
 
 	* baseboards/generic-sim.exp: Check $DEJAGNU_SIM_OPTION.
->>>>>>> master
+
+2015-04-17  Rob Savoye  <rob.savoye@linaro.org>
+
+	* lib/libgloss.exp (find_g++): Look for xg++ before g++.
 
 2015-03-30  Ben Elliston  <bje@gnu.org>
 
