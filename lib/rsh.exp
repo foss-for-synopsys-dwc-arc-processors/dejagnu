@@ -194,8 +194,6 @@ proc rsh_download {desthost srcfile destfile} {
 	set desthost [board_info $desthost hostname]
     }
 
-    # rm has no output, which causes problems with ssh using ControlMaster
-    set status [catch "exec $RSH $rsh_port $rsh_useropts $rcp_user$desthost rm -f $destfile |& ''" output]
     set status [catch "exec $RCP $rcp_port $srcfile $rcp_user$desthost:$destfile |& cat" output]
     if { $status == 0 } {
 	verbose "Copied $srcfile to $desthost:$destfile" 2

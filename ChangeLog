@@ -1,3 +1,15 @@
+2015-08-05  Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
+
+	* The current workaround for ControlMaster keeping ssh process
+	alive is causing "ssh $target rm -f" to be executed AFTER
+	following "scp" command, thus creating an illusion of scp never
+	happenning.  Since we are now using ControlPersist (which creates
+	master connection as a stand-alone process) the workaround is no
+	longer necessary.
+
+	Since we (Linaro TCWG) use ssh, this patch just removes "ssh rm
+	-f", since scp will overwrite the file, if one is present.
+
 2015-07-30  Pedro Alves  <palves@redhat.com>
 
 	* lib/remote.exp (close_wait_program): New procedure.
