@@ -10,6 +10,10 @@
 	Since we (Linaro TCWG) use ssh, this patch just removes "ssh rm
 	-f", since scp will overwrite the file, if one is present.
 
+2015-09-10  Robert Suchanek  <Robert.Suchanek@imgtec.com>
+
+	* baseboards/multi-sim.exp (rpath_flags): Add libgomp.so check.
+
 2015-07-30  Pedro Alves  <palves@redhat.com>
 
 	* lib/remote.exp (close_wait_program): New procedure.
