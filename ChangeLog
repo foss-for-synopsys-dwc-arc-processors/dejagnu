@@ -10,6 +10,10 @@
 	Since we (Linaro TCWG) use ssh, this patch just removes "ssh rm
 	-f", since scp will overwrite the file, if one is present.
 
+2015-11-11  Michael Forney  <forney@google.com>
+
+	* lib/target.exp (default_target_compile): Honor LDFLAGS_FOR_TARGET.
+
 2015-11-11  Ben Elliston  <bje@gnu.org>
 
 	* doc/dejagnu.texi: Regenerate.
