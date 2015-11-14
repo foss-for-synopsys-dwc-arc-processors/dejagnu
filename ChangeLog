@@ -10,6 +10,10 @@
 	Since we (Linaro TCWG) use ssh, this patch just removes "ssh rm
 	-f", since scp will overwrite the file, if one is present.
 
+2015-11-14  Ben Elliston  <bje@gnu.org>
+
+	* runtest.exp (usage): Improve help text.
+
 2015-11-12  Ben Elliston  <bje@gnu.org>
 
 	* runtest.exp (usage): Sort options in usage.
