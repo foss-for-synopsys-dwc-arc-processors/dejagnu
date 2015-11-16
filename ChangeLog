@@ -10,6 +10,12 @@
 	Since we (Linaro TCWG) use ssh, this patch just removes "ssh rm
 	-f", since scp will overwrite the file, if one is present.
 
+2015-11-16  Ben Elliston  <bje@gnu.org>
+
+	* runtest.exp: Refer to "DejaGnu version", not "Framework
+	version" in --version output.
+	* testsuite/runtest.all/options.exp: Update test case.
+
 2015-11-14  Ben Elliston  <bje@gnu.org>
 
 	* runtest.exp (usage): Improve help text.
