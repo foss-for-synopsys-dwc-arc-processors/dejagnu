@@ -36,7 +36,16 @@ proc ${board}_download { dest file args } {
      	set args "$args --bigendian"
     }
     
-    return [local_exec "$model --image $file $args" "" "" $timeout]
+    set result [local_exec "$model --image $file $args" "" "" $timeout]
+    set status [lindex $result 0]
+    set output [lindex $result 1]
+    if { $status == 0 } {
+	verbose "Executed $file on $model" 2
+	return $file
+    } else {
+	verbose "Download to $model failed, $output."
+	return ""
+    }
 }
 
 
