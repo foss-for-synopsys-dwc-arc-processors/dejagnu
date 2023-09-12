@@ -33,10 +33,24 @@ process_multilib_options ""
 # with what compiler is tested if we're testing gcc.
 set_board_info compiler "[find_gcc]"
 
+# Select the right spec file
+set xldflags ""
+# Check if the SIM environment variable exists
+if {[info exists env(SIM)]} {
+    # Check if the value of SIM is equal to "nsim"
+    if {$env(SIM) eq "nsim"} {
+	case "$target_triplet" in {
+	    { riscv*-unknown-elf* } {
+		set xldflags "--specs=semihost.specs"
+	    }
+	}
+    }
+}
+
 # The basic set of flags needed to build "hello world" for this
 # board. This board uses libgloss and newlib.
 set_board_info cflags	"[libgloss_include_flags] [newlib_include_flags]"
-set_board_info ldflags	"[libgloss_link_flags] [newlib_link_flags]"
+set_board_info ldflags	"[libgloss_link_flags] $xldflags [newlib_link_flags]"
 
 # This board doesn't use a linker script.
 set_board_info ldscript ""
