@@ -1,3 +1,11 @@
+2023-11-07  Jacob Bachmeyer  <jcb@gnu.org>
+
+	PR66984
+
+	* runtest.exp: Change tests for [info exists target_alias] to
+	instead test for the empty string, to which target_alias is
+	unconditionally initialized at early startup.
+
 2023-04-20  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR62982

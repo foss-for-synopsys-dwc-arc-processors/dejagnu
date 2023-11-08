@@ -233,7 +233,7 @@ proc transform { name } {
 	if {[target_info exists target_install]} {
 	    set target_install [target_info target_install]
 	}
-	if {[info exists target_alias]} {
+	if {$target_alias ne ""} {
 	    set tmp $target_alias-$name
 	} elseif {[info exists target_install]} {
 	    if { [lsearch -exact $target_install $target_alias] >= 0 } {
@@ -242,6 +242,12 @@ proc transform { name } {
 		set tmp "[lindex $target_install 0]-$name"
 	    }
 	}
+	# There appears to be a possibility for tmp to be unset at this
+	# point, which will cause a Tcl error, but this can only occur if
+	# the init files invoke transform prior to defining target_alias,
+	# since the target_alias will be defaulted to the value of
+	# target_triplet before tests are run.  If target_triplet is also
+	# empty, this point will not be reached; see test above.
 	verbose "Transforming $name to $tmp"
 	return $tmp
     }
@@ -890,7 +896,7 @@ unset arg_target_triplet
 #
 # Default target_alias to target_triplet.
 #
-if {![info exists target_alias]} {
+if {$target_alias eq ""} {
     set target_alias $target_triplet
 }
 
