@@ -49,7 +49,7 @@ if {[info exists env(SIM)]} {
 
 # The basic set of flags needed to build "hello world" for this
 # board. This board uses libgloss and newlib.
-set_board_info cflags	"[libgloss_include_flags] [newlib_include_flags]"
+set_board_info cflags	"[libgloss_include_flags] [newlib_include_flags] -mtune=rhx"
 set_board_info ldflags	"[libgloss_link_flags] $xldflags [newlib_link_flags]"
 
 # This board doesn't use a linker script.
