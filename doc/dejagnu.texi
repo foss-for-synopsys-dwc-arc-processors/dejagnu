@@ -10,7 +10,7 @@
 
 @copying
 @c man begin COPYRIGHT
-Copyright @copyright{} 1992-2020, 2022 Free Software Foundation, Inc.
+Copyright @copyright{} 1992-2020, 2022, 2023 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -1169,6 +1169,12 @@ summarized together with expected failures (@samp{XFAIL} and
 @samp{XPASS}) in two additional columns: @samp{?PASS} and
 @samp{?FAIL}.  Additionally, if a test produced any warnings or
 errors, tags @samp{!W!} or @samp{!E!} are added at the end of the row.
+
+If DejaGnu's multiple-pass testing features were used, the table
+features an additional group of summary rows reporting totals for each
+named pass across all tools that ran that pass.  Lastly, the table
+ends with an unmarked grand total row reporting totals for all tools
+across all testing passes.
 
 @node Customizing DejaGnu, Extending DejaGnu, Running other DejaGnu commands, Top
 @chapter Customizing DejaGnu

@@ -1,3 +1,10 @@
+2023-11-22  Jacob Bachmeyer  <jcb@gnu.org>
+
+	PR67391
+
+	* doc/dejagnu.texi (Invoking dejagnu report card): Document
+	existence of totals rows in the produced table.
+
 2023-11-07  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR66984
