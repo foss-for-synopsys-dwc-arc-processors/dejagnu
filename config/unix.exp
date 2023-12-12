@@ -133,7 +133,7 @@ proc unix_load { dest prog args } {
 	    set remotecmd "$remotefile"
 	}
 
-	set status [remote_exec $dest $remotefile $parg $inp]
+	set status [remote_exec $dest $remotefile $parg $inp "" $wait_timeout]
 	remote_file $dest delete $remotefile.o $remotefile
 	if { [lindex $status 0] < 0 } {
 	    verbose -log "Couldn't execute $prog, [lindex $status 1]" 3

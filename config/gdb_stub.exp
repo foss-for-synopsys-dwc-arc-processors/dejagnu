@@ -471,6 +471,7 @@ proc gdb_stub_wait { dest timeout } {
 }
 
 proc gdb_stub_load { dest prog args } {
+    global test_timeout
     global gdb_prompt
     set argnames { "command-line arguments" "input file" "output file" }
 
@@ -480,14 +481,18 @@ proc gdb_stub_load { dest prog args } {
 	}
     }
 
+    set wait_timeout 120
+    if {[info exists test_timeout]} {
+	set wait_timeout $test_timeout
+    }
+
     set result [remote_spawn $dest $prog]
 
     if { $result < 0 } {
 	return [list "fail" "remote_spawn failed"]
     }
 
-    # FIXME: The value 120 should be a parameter.
-    set result [remote_wait $dest 120]
+    set result [remote_wait $dest $wait_timeout]
     set status [lindex $result 0]
     set output [lindex $result 1]
 

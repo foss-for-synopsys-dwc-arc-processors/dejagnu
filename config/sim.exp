@@ -60,6 +60,8 @@ proc sim_wait { dest timeout } {
 }
 
 proc sim_load { dest prog args } {
+    global test_timeout
+
     set inpfile ""
     if { [llength $args] > 1 } {
 	if { [lindex $args 1] ne "" } {
@@ -75,6 +77,8 @@ proc sim_load { dest prog args } {
 
     if {[board_info $dest exists sim_time_limit]} {
 	set sim_time_limit [board_info $dest sim_time_limit]
+    } elseif {[info exists test_timeout]} {
+	set sim_time_limit $test_timeout
     } else {
 	set sim_time_limit 240
     }

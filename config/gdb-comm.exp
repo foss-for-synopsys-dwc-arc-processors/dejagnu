@@ -253,7 +253,7 @@ proc gdb_comm_load { dest prog args } {
     global GDB
     global GDBFLAGS
     global gdb_prompt
-    global timeout
+    global test_timeout
     set argnames { "command-line arguments" "input file" "output file" }
 
     for { set x 0 } { $x < [llength $args] } { incr x } {
@@ -267,9 +267,10 @@ proc gdb_comm_load { dest prog args } {
 	return [list "untested" ""]
     }
 
-    # FIXME: The value 300 below should be a parameter.
     if {[board_info $dest exists testcase_timeout]} {
 	set testcase_timeout [board_info $dest testcase_timeout]
+    } elseif {[info exists test_timeout]} {
+	set testcase_timeout $test_timeout
     } else {
 	set testcase_timeout 300
     }

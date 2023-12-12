@@ -199,7 +199,14 @@ set_board_info rcp_prog /usr/bin/scp
 proc qemu_load { dest prog args } {
     global qemu
     global timeout
-    set ret [local_exec "$qemu $prog" "" "" $timeout]
+    global test_timeout
+
+    set wait_timeout $timeout
+    if {[info exists test_timeout]} {
+	set wait_timeout $test_timeout
+    }
+
+    set ret [local_exec "$qemu $prog" "" "" $wait_timeout]
 
     if { [array size ret] == 0 } {
 	return "pass"
