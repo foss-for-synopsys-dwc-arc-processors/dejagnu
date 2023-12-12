@@ -93,6 +93,8 @@ proc sim_load { dest prog args } {
 	set cmd $prog
     }
 
+    verbose -log "Executing on $dest: $prog (timeout = $sim_time_limit)" 2
+
     # Run the program with a limited amount of real time. While
     # this isn't as nice as limiting the amount of CPU time, it
     # will have to do.

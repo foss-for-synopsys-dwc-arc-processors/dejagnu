@@ -77,12 +77,13 @@ proc unix_load { dest prog args } {
 	setenv LD_LIBRARY_PATH $ld_library_path:$orig_ld_library_path
 	setenv SHLIB_PATH $ld_library_path:$orig_ld_library_path
 	verbose -log "Setting LD_LIBRARY_PATH to $ld_library_path:$orig_ld_library_path" 2
-	verbose -log "Execution timeout is: $wait_timeout" 2
 
 	# Prepend shell name (e.g., qemu emulator) to the command.
 	if {[board_info $dest exists exec_shell]} {
 	    set command "[board_info $dest exec_shell] $command"
 	}
+
+	verbose -log "Executing on $dest: $command (timeout = $wait_timeout)" 2
 
 	set id [remote_spawn $dest $command "readonly"]
 	if { $id < 0 } {

@@ -206,6 +206,8 @@ proc qemu_load { dest prog args } {
 	set wait_timeout $test_timeout
     }
 
+    verbose -log "Executing on $dest: $prog (timeout = $wait_timeout)" 2
+
     set ret [local_exec "$qemu $prog" "" "" $wait_timeout]
 
     if { [array size ret] == 0 } {

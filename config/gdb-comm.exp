@@ -275,6 +275,8 @@ proc gdb_comm_load { dest prog args } {
 	set testcase_timeout 300
     }
 
+    verbose -log "Executing on $dest: $prog (timeout = $testcase_timeout)" 2
+
     if { [isremote host] || ![board_info host exists fileid] } {
 	gdb_comm_start $dest
     }
