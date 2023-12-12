@@ -38,8 +38,9 @@ proc unix_load { dest prog args } {
     set output ""
     set orig_ld_library_path ""
 
-    if {![info exists test_timeout]} {
-	set test_timeout 300
+    set wait_timeout 300
+    if {[info exists test_timeout]} {
+	set wait_timeout $test_timeout
     }
 
     if { [llength $args] > 0 } {
@@ -76,7 +77,7 @@ proc unix_load { dest prog args } {
 	setenv LD_LIBRARY_PATH $ld_library_path:$orig_ld_library_path
 	setenv SHLIB_PATH $ld_library_path:$orig_ld_library_path
 	verbose -log "Setting LD_LIBRARY_PATH to $ld_library_path:$orig_ld_library_path" 2
-	verbose -log "Execution timeout is: $test_timeout" 2
+	verbose -log "Execution timeout is: $wait_timeout" 2
 
 	# Prepend shell name (e.g., qemu emulator) to the command.
 	if {[board_info $dest exists exec_shell]} {
@@ -88,7 +89,7 @@ proc unix_load { dest prog args } {
 	    set output "remote_spawn failed"
 	    set status -1
 	} else {
-	    set status [remote_wait $dest $test_timeout]
+	    set status [remote_wait $dest $wait_timeout]
 	    set output [lindex $status 1]
 	    set status [lindex $status 0]
 	}
