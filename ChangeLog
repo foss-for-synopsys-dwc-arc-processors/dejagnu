@@ -1,3 +1,29 @@
+2023-12-12  Jacob Bachmeyer  <jcb@gnu.org>
+
+	Import patches from Maciej W. Rozycki <macro@embecosm.com>
+
+	* baseboards/qemu.exp (qemu_load): Add execution reporting.
+	* config/gdb-comm.exp (gdb_comm_load): Likewise.
+	* config/gdb_stub.exp (gdb_stub_load): Likewise.
+	* config/sim.exp (sim_load): Likewise.
+	* config/unix.exp (unix_load): Report full command in addition to
+	timeout value.
+
+	* baseboards/qemu.exp (qemu_load): Respect global `test_timeout'
+	setting.
+	* config/gdb-comm.exp (gdb_comm_load): Likewise.
+	* config/gdb_stub.exp (gdb_stub_load): Likewise.
+	* config/sim.exp (sim_load): Likewise.
+	* config/unix.exp (unix_load): Likewise, in the remote case.
+	* doc/dejagnu.texi (Local configuration file): Update
+	accordingly.
+
+	* config/gdb-comm.exp (gdb_comm_load): Set `testcase_timeout'
+	earlier on.
+
+	* config/unix.exp (unix_load): Don't ever set `test_timeout',
+	just use it locally.
+
 2023-11-22  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR67391
