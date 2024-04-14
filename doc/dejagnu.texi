@@ -10,7 +10,7 @@
 
 @copying
 @c man begin COPYRIGHT
-Copyright @copyright{} 1992-2020, 2022, 2023 Free Software Foundation, Inc.
+Copyright @copyright{} 1992-2020, 2022, 2023, 2024 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -144,8 +144,11 @@ is the infrastructure that is created to test a specific program or
 tool.  Each program can have multiple testsuites, all supported by a
 single test harness.  DejaGnu is written in Expect, which in turn uses
 Tcl, the Tool command language.  There is more information on Tcl at
-the @uref{http://www.tcl.tk,Tcl/Tk web site} and the
-@uref{http://expect.nist.gov,Expect web site}.
+the @uref{https://www.tcl.tk,Tcl/Tk web site} and the
+@uref{https://core.tcl-lang.org/expect/,Expect web site}.  There is
+also some historical information about Expect at the
+@uref{https://www.nist.gov/services-resources/software/expect,NIST web
+site}.
 
 Julia Menapace first coined the term @emph{DejaGnu} to describe an
 earlier testing framework she wrote at Cygnus Support for testing GDB.
