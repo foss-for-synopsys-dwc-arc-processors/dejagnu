@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2016 Free Software Foundation, Inc.
+# Copyright (C) 1992-2016, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -29,7 +29,7 @@ proc start_expect { } {
     # can execute library code without DejaGnu
 
     # Start expect
-    set stty_init { -onlcr -onlret }
+    set stty_init { -onlcr }
     spawn $EXPECT
     expect {
 	-re "expect.*> " {

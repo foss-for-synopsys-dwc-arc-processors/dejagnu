@@ -1,4 +1,4 @@
-# Copyright (C) 2018 Free Software Foundation, Inc.
+# Copyright (C) 2018, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -28,6 +28,8 @@ set result_column_map {
 
 set test_results { PASS FAIL KPASS KFAIL XPASS XFAIL
 		   UNSUPPORTED UNRESOLVED UNTESTED }
+
+set stty_init { -onlcr }
 
 # each entry: { {mode n} { suffix_tag... } { pass... } { { result name }... } }
 array unset tuplemap

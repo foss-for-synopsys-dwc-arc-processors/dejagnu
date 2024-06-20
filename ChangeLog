@@ -1,3 +1,16 @@
+2024-06-19  Jacob Bachmeyer  <jcb@gnu.org>
+
+	PR71624
+
+	* testsuite/lib/libsup.exp (start_expect): Remove "-onlret" from
+	stty_init.  While POSIX defines this option, it is not implemented
+	on Mac OS X 10.5.8 and causes spurious failures on that system.
+	* testsuite/report-card.all/onetest.exp: Likewise.
+
+	* testsuite/report-card.all/passes.exp: While revising stty_init,
+	the lack of a similar setting was noticed in this file.  Ensure
+	that "stty -onlcr" is applied to the Expect ptys.
+
 2024-04-13  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* doc/dejagnu.texi (What is DejaGnu?): Update web site addresses.
