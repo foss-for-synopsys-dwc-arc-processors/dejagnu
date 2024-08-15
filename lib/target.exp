@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2019, 2020 Free Software Foundation, Inc.
+# Copyright (C) 1992-2019, 2020, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -265,12 +265,12 @@ proc prune_warnings { text } {
     regsub -all "(^|\n)(\[^\n\]*: warning: \[^\n\]* is (often|almost always) misused, please use \[^\n\]*\n?)" $text "\\1" text
 
     # GNU ld warns about functions marked as dangerous in GNU libc.
-    regsub -all "(^|\n)\[^\n\]*: In function\[^\n\]*\n\[^\n\]\[^\n\]*is dangerous\[^\n\]*" $text "" text
-    regsub -all "(^|\n)\[^\n\]*: In function\[^\n\]*\n\[^\n\]\[^\n\]*the use of \[^\n\]* is dangerous, better use \[^\n\]*" $text "" text
+    regsub -all "(^|\n)\[^\n\]*: \[Ii\]n function\[^\n\]*\n\[^\n\]\[^\n\]*is dangerous\[^\n\]*" $text "" text
+    regsub -all "(^|\n)\[^\n\]*: \[Ii\]n function\[^\n\]*\n\[^\n\]\[^\n\]*the use of \[^\n\]* is dangerous, better use \[^\n\]*" $text "" text
     regsub -all "(^|\n)\[^\n\]*is dangerous\[^\n\]*" $text "" text
 
     # Libgloss libnosys defines functions that warn when linked in
-    regsub -all "(^|\n)\[^\n\]*: In function\[^\n\]*\n\[^\n\]\[^\n\]*is not implemented and will always fail\[^\n\]*" $text "" text
+    regsub -all "(^|\n)\[^\n\]*: \[Ii\]n function\[^\n\]*\n\[^\n\]\[^\n\]*is not implemented and will always fail\[^\n\]*" $text "" text
     regsub -all "(^|\n)\[^\n\]*is not implemented and will always fail\[^\n\]*" $text "" text
 
     # libstdc++-v3 tests can emit cpplib warnings due to duplicate -isystem / -I flags

@@ -1,3 +1,12 @@
+2024-08-14  Jacob Bachmeyer  <jcb@gnu.org>
+
+	Thanks to Hans-Peter Nilsson for reporting this issue.
+
+	* lib/target.exp (prune_warnings): Adjust patterns for messages
+	emitted by the GNU linker.  Older versions capitalized the message
+	stating the function that triggered the warning, while newer
+	versions do not.  DejaGnu now recognizes and removes both forms.
+
 2024-06-19  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR71624
