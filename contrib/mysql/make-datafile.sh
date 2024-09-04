@@ -47,7 +47,7 @@ echo "Tools are: ${tools}"
 for testrun in "$@"; do
   # Get the build info
   binfo=$(mysql -u"$user" -p"$passwd" --local -e "SELECT tool,arch,date,version,branch,build_machine FROM dejagnu.testruns WHERE testrun=${testrun}" | tail -1)
- 
+
   # Get rid of the embedded newlines
   binfo=$(echo "$binfo" | tr -d '\n')
 
@@ -57,7 +57,7 @@ for testrun in "$@"; do
   date=$(echo "$binfo" | cut -d ' ' -f 3)
   version=$(echo "$binfo" | cut -d ' ' -f 5)
   build_machine=$(echo "$binfo" | cut -d ' ' -f 7)
- 
+
   # Get the test counts
 #  total=`mysql -u"$user" -p${passwd} -e "SELECT count(*) FROM dejagnu.test WHERE result!=''" | tail -1`
   passes=$(mysql -u"$user" -p"$passwd" --local -e "SELECT count(*) FROM dejagnu.test WHERE testrun=${testrun} AND result='PASS'" | tail -1)

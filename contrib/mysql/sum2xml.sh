@@ -101,4 +101,3 @@ echo "</testsuite>" >> "$outfile"
 
 # compress the file again
 ${comp} "$infile"
-

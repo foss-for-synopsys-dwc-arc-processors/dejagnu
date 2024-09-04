@@ -76,9 +76,9 @@ for j in ${datafiles}; do
 	if test ${cindex} -eq 0; then
 	    echo "Creating gnuplot comand file: ${outfile}"
 	    cat <<EOF >${outfile}
-set boxwidth 0.9 relative 
-set style data histograms 
-set style histogram cluster 
+set boxwidth 0.9 relative
+set style data histograms
+set style histogram cluster
 set style fill solid 1.0 border lt -1
 set autoscale x
 set autoscale y
@@ -125,5 +125,3 @@ replot
 EOF
 #    fi
 #done
-
-

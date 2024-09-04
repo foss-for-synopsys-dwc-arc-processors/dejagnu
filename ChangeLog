@@ -1,3 +1,8 @@
+2024-09-03  Jacob Bachmeyer  <jcb@gnu.org>
+
+	Clean up whitespace issues found while updating license notices.
+	Also fix a missing paragraph separator line in one of the notices.
+
 2024-08-14  Jacob Bachmeyer  <jcb@gnu.org>
 
 	Thanks to Hans-Peter Nilsson for reporting this issue.

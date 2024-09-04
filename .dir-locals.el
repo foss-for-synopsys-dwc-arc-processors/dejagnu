@@ -19,4 +19,3 @@
 	      (tcl-continued-indent-level . 4)
 	      (indent-tabs-mode . t)))
 )
-

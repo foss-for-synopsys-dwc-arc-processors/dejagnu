@@ -1,21 +1,22 @@
 #!/bin/sh
 
-# 
+#
 # Copyright (C) 2005-2019, 2020 Free Software Foundation, Inc.
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-# 
+#
 # Run this to generate all the initial makefiles, etc.
 
 srcdir=`dirname $0`
@@ -46,7 +47,7 @@ fi
 
 (grep "^AC_PROG_INTLTOOL" $srcdir/configure.ac >/dev/null) && {
   (${INTLTOOLIZE:-intltoolize} --version) < /dev/null > /dev/null 2>&1 || {
-    echo 
+    echo
     echo "**Error**: You must have \`intltool' installed."
     echo "You can get it from:"
     echo "  ftp://ftp.gnome.org/pub/GNOME/"
@@ -141,8 +142,8 @@ if test -z "$NO_LIBTOOLIZE" ; then
     if test -d libltdl; then
       for i in libltdl/*.c; do
 #      echo "Fixing $i..."
-        mv $i $i.orig
-        sed -e 's/include <config.h>/include <gnashconfig.h>/' $i.orig > $i
+	mv $i $i.orig
+	sed -e 's/include <config.h>/include <gnashconfig.h>/' $i.orig > $i
       done
     fi
     # sized one to keep autoconf happy.
@@ -162,7 +163,7 @@ fi
 
 #for coin in `find $srcdir -name CVS -prune -o -name configure.ac -print`
 for coin in configure.ac
-do 
+do
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
     echo skipping $dr -- flagged as no auto-gen
@@ -171,17 +172,17 @@ do
     ( cd $dr
 
      if test -d macros; then
-        aclocalinclude="-I macros $ACLOCAL_FLAGS"
+	aclocalinclude="-I macros $ACLOCAL_FLAGS"
      else
-        aclocalinclude="$ACLOCAL_FLAGS"
+	aclocalinclude="$ACLOCAL_FLAGS"
      fi
 
      if test -d cygnal; then
-        aclocalinclude="-I cygnal ${aclocalinclude}"
+	aclocalinclude="-I cygnal ${aclocalinclude}"
      fi
 
      if test -d libltdl/m4; then
-        aclocalinclude="-I libltdl/m4 -I macros $ACLOCAL_FLAGS"
+	aclocalinclude="-I libltdl/m4 -I macros $ACLOCAL_FLAGS"
      fi
 
       if grep "^AM_GLIB_GNU_GETTEXT" configure.ac >/dev/null; then
@@ -191,18 +192,18 @@ do
 	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
       fi
       if grep "^AC_PROG_INTLTOOL" configure.ac >/dev/null; then
-        echo "Running intltoolize --copy --force --automake ..."
+	echo "Running intltoolize --copy --force --automake ..."
 	${INTLTOOLIZE:-intltoolize} --copy --force --automake
       fi
       if grep "^AM_PROG_XML_I18N_TOOLS" configure.ac >/dev/null; then
-        echo "Running xml-i18n-toolize --copy --force --automake..."
+	echo "Running xml-i18n-toolize --copy --force --automake..."
 	xml-i18n-toolize --copy --force --automake
       fi
 #       if grep "^AC_PROG_LIBTOOL" configure.ac >/dev/null; then
-# 	if test -z "$NO_LIBTOOLIZE" ; then 
-# 	  echo "Running libtoolize --force --copy ..."
-# 	  ${LIBTOOLIZE:-libtoolize} --force --copy
-# 	fi
+#	if test -z "$NO_LIBTOOLIZE" ; then
+#	  echo "Running libtoolize --force --copy ..."
+#	  ${LIBTOOLIZE:-libtoolize} --force --copy
+#	fi
 #       fi
       echo "Running aclocal $aclocalinclude ..."
       ${ACLOCAL:-aclocal} $aclocalinclude
@@ -214,8 +215,8 @@ do
       # This is to prevent regenerating and checking in a pile of Makefiles
       # that haven't really changed. They clutter up the checkin messages.
       if test x"$1" = x ; then
-        echo "Running automake --add-missing --copy $am_opt ..."
-        ${AUTOMAKE:-automake} -Wno-portability --add-missing --copy $am_opt
+	echo "Running automake --add-missing --copy $am_opt ..."
+	${AUTOMAKE:-automake} -Wno-portability --add-missing --copy $am_opt
       fi
       echo "Running autoconf ..."
       ${AUTOCONF:-autoconf} -Wno-portability
@@ -224,4 +225,3 @@ do
 done
 
 conf_flags="--enable-maintainer-mode"
-
