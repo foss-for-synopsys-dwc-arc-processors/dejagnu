@@ -3,6 +3,73 @@
 	Clean up whitespace issues found while updating license notices.
 	Also fix a missing paragraph separator line in one of the notices.
 
+	Update license notices to standard form for GPLv3.  The move to
+	GPLv3+ appears to have been done by s/version 2/version 3/ in the
+	notices.  Unfortunately, the FSF has moved their office and the
+	old mailing address is no longer valid.
+
+	Most of the work was automated using Emacs:
+	(let ((filelist (cons default-directory nil)))
+	  (while filelist
+	    (when (car filelist)
+	      (message "Examining %s ..." (car filelist)))
+	    (cond
+	     ((null (car filelist)) nil)
+	     ;; These files are either imported or not GPL.
+	     ((string-match
+	       (concat "/dejagnu/\\(doc/\\|ChangeLog\\|AUTHORS\\|COPYING"
+		       "\\|INSTALL\\|MAINTAINERS\\|NEWS\\|TODO\\|aclocal[.]m4"
+		       "\\|compile\\|config[.]\\(?:guess\\|sub\\)\\|depcomp"
+		       "\\|configure\\|install-sh\\|mdate-sh\\|missing"
+		       "\\)")
+	       (car filelist)) nil)
+	     ;; Nor do any of the READMEs contain GPL notices.
+	     ((string-match "README" (car filelist)) nil)
+	     ((file-directory-p (car filelist))
+	      (nconc filelist
+		     (mapcar (function
+			      (lambda (x)
+				(cond
+				 ((string-equal "." x) nil)
+				 ((string-equal ".." x) nil)
+				 ((string-match "^[.]git" x) nil)
+				 (t (concat (file-name-as-directory
+					     (car filelist))
+					    x)))))
+			     (directory-files (car filelist)))))
+	     ((file-regular-p (car filelist))
+	      (save-excursion
+		(let ((had-buffer-p (get-file-buffer (car filelist))))
+		  (cond (had-buffer-p (switch-to-buffer had-buffer-p))
+			(t (switch-to-buffer
+			    (find-file-noselect (car filelist)))))
+		  (condition-case fail
+		      (save-excursion
+			;; The license block is at the beginning of the file.
+			(goto-char (point-min))
+			;; Two minor punctuation changes:
+			(search-forward "DejaGnu is free software; ")
+			(replace-match "DejaGnu is free software: ")
+			(search-forward "Free Software Foundation; either")
+			(replace-match "Free Software Foundation, either")
+			;; The most important change is trickier:
+			(search-forward
+			 "received a copy of the GNU General Public License")
+			(search-forward "along with DejaGnu")
+			(let* ((start (point-marker))
+			       (end (copy-marker (search-forward "USA") t)))
+			  (delete-region start end)
+			  (goto-char start)
+			  (insert
+			   ".  If not, see <http://www.gnu.org/licenses/>"))
+			;; Do not update copyright years for trivial changes.
+			(let ((before-save-hook nil)) (save-buffer)))
+		    (search-failed (setq had-buffer-p t) nil))
+		  (unless had-buffer-p (kill-buffer nil))))))
+	    (when (car filelist)
+	      (message "Examining %s ... done." (car filelist)))
+	    (setq filelist (cdr filelist))))
+
 2024-08-14  Jacob Bachmeyer  <jcb@gnu.org>
 
 	Thanks to Hans-Peter Nilsson for reporting this issue.
