@@ -1,3 +1,13 @@
+2024-09-06  Jacob Bachmeyer  <jcb@gnu.org>
+
+	Thanks to Stefan for trying an environment that exposed this bug.
+
+	* runtest.exp: Revise search for user login name.  Remove useless
+	test because there is no way for logname to be set when this code
+	is reached.  Collect nested if/else/if tree into if/elseif chain.
+	Fix use of catch to avoid errors if whoami(1) and who(1) are not
+	available.
+
 2024-09-03  Jacob Bachmeyer  <jcb@gnu.org>
 
 	Clean up whitespace issues found while updating license notices.

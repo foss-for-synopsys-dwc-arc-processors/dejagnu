@@ -1,5 +1,6 @@
 # runtest.exp -- Test framework driver
-# Copyright (C) 1992-2019, 2020, 2022, 2023 Free Software Foundation, Inc.
+# Copyright (C) 1992-2019, 2020, 2022, 2023, 2024
+#               Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -610,28 +611,24 @@ verbose [concat "Initial working directory is" [pwd]]
 #
 # get the users login name
 #
+if { [info exists env(USER)] } {
+    set logname $env(USER)
+} elseif { [info exists env(LOGNAME)] } {
+    set logname $env(LOGNAME)
+} elseif { [catch {exec whoami} logname] == 0 } {
+    # we now have it
+} elseif { [catch {exec who am i} logname] == 0 } {
+    # systems using "who am i" apparently return some associated garbage
+    set logname [lindex [split $logname " !"] 1]
+} else {
+    # if we get here, logname contains an error message; erase it
+    set logname ""
+}
+
+# on the GNU system, "who am i" can successfully return an empty string
 if { $logname eq "" } {
-    if {[info exists env(USER)]} {
-	set logname $env(USER)
-    } else {
-	if {[info exists env(LOGNAME)]} {
-	    set logname $env(LOGNAME)
-	} else {
-	    # try getting it with whoami
-	    catch "set logname [exec whoami]" tmp
-	    if {[string match "*couldn't find*to execute*" $tmp]} {
-		# try getting it with who am i
-		unset tmp
-		catch "set logname [exec who am i]" tmp
-		if {[string match "*Command not found*" $tmp]} {
-		    send_user "ERROR: couldn't get the users login name\n"
-		    set logname "Unknown"
-		} else {
-		    set logname [lindex [split $logname " !"] 1]
-		}
-	    }
-	}
-    }
+    send_user "ERROR: couldn't get the user's login name\n"
+    set logname "Unknown"
 }
 
 verbose "Login name is $logname"
