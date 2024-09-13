@@ -1,3 +1,9 @@
+2024-09-12  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* dejagnu: Adjust #! line according to recommendation in the
+	Autoconf manual.  *Note: (autoconf)Portable Shell.
+	* runtest: Likewise.
+
 2024-09-06  Jacob Bachmeyer  <jcb@gnu.org>
 
 	Thanks to Stefan for trying an environment that exposed this bug.
