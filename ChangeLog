@@ -4,6 +4,9 @@
 	testing the dejagnu(1) launcher with a shell specified as
 	LAUNCHER_SHELL on the command line.
 
+	Also add support for multipass testing with multiple shells by
+	setting LAUNCHER_SHELLS to a Tcl list on the command line.
+
 2024-09-12  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* dejagnu: Adjust #! line according to recommendation in the

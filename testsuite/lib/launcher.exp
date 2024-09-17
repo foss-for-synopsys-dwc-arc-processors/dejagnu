@@ -29,6 +29,14 @@ if { [which $LAUNCHER] == 0 } {
     exit 2
 }
 
+if { [info exists LAUNCHER_SHELLS] } {
+    set MULTIPASS [list [list default LAUNCHER_SHELL= ]]
+    foreach shell $LAUNCHER_SHELLS {
+	lappend MULTIPASS [list $shell \
+			       [join [list LAUNCHER_SHELL $shell] =]]
+    }
+}
+
 # run dejagnu(1) LAUNCHER with ARGLIST, returning { output exit_code }
 proc dejagnu_run { launcher arglist envlist } {
     global LAUNCHER_SHELL errorCode
