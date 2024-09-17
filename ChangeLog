@@ -1,3 +1,9 @@
+2024-09-16  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* testsuite/lib/launcher.exp (dejagnu_run): Add support for
+	testing the dejagnu(1) launcher with a shell specified as
+	LAUNCHER_SHELL on the command line.
+
 2024-09-12  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* dejagnu: Adjust #! line according to recommendation in the

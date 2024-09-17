@@ -1,4 +1,4 @@
-# Copyright (C) 2018, 2021 Free Software Foundation, Inc.
+# Copyright (C) 2018, 2021, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -31,12 +31,15 @@ if { [which $LAUNCHER] == 0 } {
 
 # run dejagnu(1) LAUNCHER with ARGLIST, returning { output exit_code }
 proc dejagnu_run { launcher arglist envlist } {
-    global errorCode
+    global LAUNCHER_SHELL errorCode
 
     set exec_cmd [list exec]
     if { [llength $envlist] > 0 } {
 	lappend exec_cmd env
 	foreach var $envlist { lappend exec_cmd $var }
+    }
+    if { [info exists LAUNCHER_SHELL] && $LAUNCHER_SHELL ne "" } {
+	lappend exec_cmd $LAUNCHER_SHELL
     }
     lappend exec_cmd $launcher
 
