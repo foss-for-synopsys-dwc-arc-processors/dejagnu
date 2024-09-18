@@ -1,5 +1,10 @@
 2024-09-17  Jacob Bachmeyer  <jcb@gnu.org>
 
+	* dejagnu: Improve search for Awk interpreter using POSIX
+	command(1) utility to search paths.  Also use POSIX getconf(1) to
+	obtain a standard system PATH that should contain POSIX versions
+	of various utilities; this enables finding POSIX Awk on Solaris 10.
+
 	* dejagnu: Quote "$verbose" when incrementing verbosity counter to
 	resolve shellcheck warning.
 	* runtest: Likewise.

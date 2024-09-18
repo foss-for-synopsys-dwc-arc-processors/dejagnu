@@ -64,6 +64,15 @@
 Variants='gawk awk tcl exp bash sh'
 readonly Variants
 
+# POSIX defines a getconf(1) command; here it returns a default PATH
+SysPATH=`getconf PATH`
+# make sure that the "system PATH" mentions at least one directory
+case $SysPATH in
+    */*)			;;	# good
+    *)		SysPATH=$PATH	;;	# otherwise copy the user PATH
+esac
+readonly SysPATH
+
 ## Recognize options
 
 # For testing and development
@@ -225,32 +234,32 @@ fi
 ## Find interpreters.
 
 # Awk and GNU awk
+have_awk=false
 if test -n "$AWK" ; then
     awkbin="$AWK"
-elif test -x "${bindir}/awk" ; then
-    awkbin="${bindir}/awk"
+    if command -v "$awkbin" > /dev/null 2>&1 ; then
+	have_awk=true
+    fi
 else
-    # find what might be a usable awk
+    # find a usable awk
     # on Solaris 10, POSIX awk is in /usr/xpg4/bin
-    for awktest in mawk /usr/xpg4/bin/awk nawk awk ; do
-	if command -v "$awktest" > /dev/null 2>&1 ; then
-	    awkbin=$awktest
-	    break;
-	fi
+    for testPATH in "$SysPATH" "$PATH" ; do
+	for awktest in mawk awk nawk ; do
+	    if PATH=$testPATH command -v "$awktest" > /dev/null 2>&1 ; then
+		awkbin=`PATH=$testPATH command -v "$awktest"`
+		# The non-POSIX awk in /usr/bin on Solaris 10 fails this test
+		if echo | "$awkbin" '1 && 1 {exit 0}' > /dev/null 2>&1 ; then
+		    have_awk=true
+		    break 2
+		fi
+	    fi
+	done
     done
 fi
 if test -n "$GAWK" ; then
     gawkbin="$GAWK"
-elif test -x "${bindir}/gawk" ; then
-    gawkbin="${bindir}/gawk"
 else
     gawkbin=gawk
-fi
-# The non-POSIX awk in /usr/bin on Solaris 10 fails this test
-if echo | "$awkbin" '1 && 1 {exit 0}' > /dev/null 2>&1 ; then
-    have_awk=true
-else
-    have_awk=false
 fi
 if command -v "$gawkbin" > /dev/null 2>&1 ; then
     have_gawk=true
