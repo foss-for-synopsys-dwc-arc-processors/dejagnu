@@ -326,10 +326,6 @@ if expr "$verbose" \> 2 > /dev/null ; then
     fi
 fi
 
-# Bourne shell
-#  This script is running, therefore we have a Bourne shell.
-have_sh=true
-
 # Expect
 #  DejaGnu configure bails out if Expect is not available, but this script
 #  can be run from the source directory without first running configure.
@@ -351,6 +347,30 @@ if expr "$verbose" \> 2 > /dev/null ; then
     else
 	echo Expect interpreter was not found
     fi
+fi
+
+# POSIX shell
+# This script is running, so we have a Bourne shell, but do we have or can
+# we easily find a POSIX shell?
+have_sh=false
+# As of 2024-09-17, according to the "APPLICATION USAGE" section in
+# <URL:https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html>,
+# POSIX says that `command -v sh` using the PATH from `getconf PATH` should
+# reliably find a POSIX shell; for now, we assume it so...
+if test -n "$POSIX_SHELL" ; then
+    shbin="$POSIX_SHELL"
+    if command -v "$shbin" > /dev/null 2>&1 ; then
+	have_sh=true
+    fi
+else
+    # find a POSIX shell
+    for testPATH in "$SysPATH" "$PATH" ; do
+	if PATH=$testPATH command -v sh > /dev/null 2>&1 ; then
+	    shbin=`PATH=$testPATH command -v sh`
+	    have_sh=true
+	    break
+	fi
+    done
 fi
 
 # Tcl
@@ -418,8 +438,10 @@ else
 		fi
 		;;
 	    sh)
-		selected_ext=sh
-		break
+		if $have_sh ; then
+		    selected_ext=sh
+		    break
+		fi
 		;;
 	    *)
 		echo ERROR: '(select-variant)' unrecognized variant "$v"
@@ -498,7 +520,7 @@ case $selected_ext in
     exp)    exec "$expectbin" -- "${commdir}/${command}.exp" ${1+"$@"} ;;
     gawk)   exec "$gawkbin" -f "${commdir}/${command}.gawk" -- ${1+"$@"} ;;
     tcl)    exec "$tclbin" "${commdir}/${command}.tcl" ${1+"$@"} ;;
-    sh)     exec /bin/sh "${commdir}/${command}.sh" ${1+"$@"} ;;
+    sh)     exec "$shbin" "${commdir}/${command}.sh" ${1+"$@"} ;;
     echo)
 	echo command: "${command}"
 	echo args: ${1+"$@"}

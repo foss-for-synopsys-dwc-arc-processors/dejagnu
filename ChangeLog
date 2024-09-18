@@ -1,5 +1,9 @@
 2024-09-17  Jacob Bachmeyer  <jcb@gnu.org>
 
+	* dejagnu: Search for a POSIX shell for commands implemented as
+	shell scripts instead of expecting commands to run with /bin/sh.
+	This allows command scripts to assume a POSIX shell from now on.
+
 	* dejagnu: Improve search for Awk interpreter using POSIX
 	command(1) utility to search paths.  Also use POSIX getconf(1) to
 	obtain a standard system PATH that should contain POSIX versions
