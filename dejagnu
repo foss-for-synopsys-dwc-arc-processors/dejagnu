@@ -39,9 +39,18 @@
 # is simple enough to work.  Most notably, nesting backtick command
 # substitution is tricky, but we do not do that.
 
+# shellcheck disable=SC2016
+# The shellcheck tool complains about single-quoted strings containing "$",
+# such as Awk programs that access fields as aid to programmers unfamiliar
+# with how the shell quoting rules differ from Python and JavaScript.
+
 # shellcheck disable=SC2209
 # The shellcheck tool complains about assigning certain constant strings to
 # variables.  In this script, the intended meaning is obvious in context.
+
+# shellcheck disable=SC2268
+# The shellcheck tool complains about using 'x' as a common prefix on both
+# sides of a comparison.  While this is no longer required, it does no harm.
 
 # ##help
 # #Usage: dejagnu COMMAND [ --help | OPTIONS... ]
@@ -70,7 +79,7 @@ verbose=0
 for a in "$@"; do
     case $a in
 	--help)				want_help=true			;;
-	-v|--v|-verbose|--verbose)	verbose=`expr $verbose + 1`	;;
+	-v|--v|-verbose|--verbose)	verbose=`expr "$verbose" + 1`	;;
 	-V|--V|-version|--version)	want_version=true		;;
     esac
 done

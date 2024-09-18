@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Copyright (C) 1992-2016, 2021 Free Software Foundation, Inc.
+# Copyright (C) 1992-2016, 2021, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -97,7 +97,7 @@ verbose=0
 debug=""
 for a in "$@" ; do
   case $a in
-      -v|--v|-verb*|--verb*)    verbose=`expr $verbose + 1` ;;
+      -v|--v|-verb*|--verb*)    verbose=`expr "$verbose" + 1` ;;
       -D0|--D0)       debug="-D 0" ;;
       -D1|--D1)       debug="-D 1" ;;
   esac

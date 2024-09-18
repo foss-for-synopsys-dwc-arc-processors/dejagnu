@@ -1,5 +1,9 @@
 2024-09-17  Jacob Bachmeyer  <jcb@gnu.org>
 
+	* dejagnu: Quote "$verbose" when incrementing verbosity counter to
+	resolve shellcheck warning.
+	* runtest: Likewise.
+
 	* dejagnu: Fix minor bug in extraction of help messages from
 	auxiliary tools.
 
