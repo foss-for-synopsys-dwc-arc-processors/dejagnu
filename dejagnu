@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Copyright (C) 2018, 2021 Free Software Foundation, Inc.
+# Copyright (C) 2018, 2021, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -446,7 +446,7 @@ if $want_help ; then
 	echo ERROR: file "'$help_file'" does not contain a help message
 	exit 2
     fi
-    exec "$AWK" '/#help$/ { pfxlen = length($0) - 4 }
+    exec "$AWK" '/#help$/ { pfxlen = length($0) - 4; next }
 	      pfxlen && substr($0, pfxlen) == "#end" { exit 0 }
 	      pfxlen { print substr($0, pfxlen) }' "$help_file"
 fi

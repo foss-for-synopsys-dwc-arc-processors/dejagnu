@@ -1,3 +1,8 @@
+2024-09-17  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* dejagnu: Fix minor bug in extraction of help messages from
+	auxiliary tools.
+
 2024-09-16  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* testsuite/lib/launcher.exp (dejagnu_run): Add support for
