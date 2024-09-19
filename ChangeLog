@@ -1,3 +1,8 @@
+2024-09-18  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* dejagnu: Adapt Zsh compatibility prologue from configure.
+	* runtest: Likewise.
+
 2024-09-17  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* dejagnu: Search for a POSIX shell for commands implemented as

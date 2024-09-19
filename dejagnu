@@ -60,6 +60,14 @@
 # #	--version		Print DejaGnu version
 # ##end
 
+# Zsh compatibility prologue adapted from configure
+if test -n "${ZSH_VERSION+set}" && (emulate sh) > /dev/null 2>&1 ; then
+    emulate sh
+    NULLCMD=:
+    alias -g '${1+"$@"}'='"$@"'
+    setopt NO_GLOB_SUBST
+fi
+
 # list of extensions supported for commands in priority order
 Variants='gawk awk tcl exp bash sh'
 readonly Variants

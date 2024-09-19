@@ -32,6 +32,14 @@
 # is simple enough to work.  Most notably, nesting backtick command
 # substitution is tricky, but we do not do that.
 
+# Zsh compatibility prologue adapted from configure
+if test -n "${ZSH_VERSION+set}" && (emulate sh) > /dev/null 2>&1 ; then
+    emulate sh
+    NULLCMD=:
+    alias -g '${1+"$@"}'='"$@"'
+    setopt NO_GLOB_SUBST
+fi
+
 # Get the execution path to this script and the current directory.
 
 mypath=${0-.}
