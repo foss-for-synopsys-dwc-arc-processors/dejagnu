@@ -1,3 +1,10 @@
+2024-09-23  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* commands/report-card.awk: When preparing to compute totals and
+	setting $0 to the list of possible test results, explicitly set NF
+	to 9 to work around a bug in AIX 7.1 awk, which fails to update NF
+	when $0 is assigned from a constant string.
+
 2024-09-18  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* dejagnu: Adapt Zsh compatibility prologue from configure.

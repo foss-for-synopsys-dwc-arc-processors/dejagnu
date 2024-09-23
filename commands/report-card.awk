@@ -1,5 +1,5 @@
 # report-card.awk -- Test summary tool
-# Copyright (C) 2018, 2021 Free Software Foundation, Inc.
+# Copyright (C) 2018, 2021, 2024 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -132,6 +132,7 @@ $1 ~ /:$/ { sub(/:$/, "", $1); Totals["tp", Tool, Pass, $1]++ }
 
 END {
     $0 = ("PASS FAIL KPASS KFAIL XPASS XFAIL UNSUPPORTED UNRESOLVED UNTESTED")
+    NF = 9	# work around bug in AIX 7.1 awk
     for (i = 1; i in Tools; i++)
 	for (j = 1; ("t", Tools[i], j) in Passes; j++)
 	    for (k = 1; k <= NF; k++) {
