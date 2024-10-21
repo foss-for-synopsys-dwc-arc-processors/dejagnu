@@ -1,3 +1,10 @@
+2024-10-20  Jacob Bachmeyer  <jcb@gnu.org>
+
+	PR73907
+
+	* doc/dejagnu.texi (Writing a test case): Fix typo reported by
+	Heiko Eissfeldt.
+
 2024-09-23  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* commands/report-card.awk: When preparing to compute totals and

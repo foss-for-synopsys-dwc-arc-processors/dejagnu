@@ -2190,7 +2190,7 @@ built up a family of Tcl procedures specialized for GDB testing.
 @cindex hints on writing a test case
 @cindex test cases, writing
 
-To preserve basic sanity, no should test ever pass if there was any
+To preserve basic sanity, no test should ever pass if there was any
 kind of problem in the test case.  To take an extreme case, tests that
 pass even when the tool will not spawn are misleading.  Ideally, a
 test in this sort of situation should not fail either.  Instead, print
