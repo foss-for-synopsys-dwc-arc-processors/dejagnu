@@ -35,11 +35,22 @@ set_board_info compiler "[find_gcc]"
 
 # The basic set of flags needed to build "hello world" for this
 # board. This board uses libgloss and newlib.
-set_board_info cflags	"[libgloss_include_flags] [newlib_include_flags]"
-set_board_info ldflags	"[libgloss_link_flags] [newlib_link_flags]"
+if {[info exists env(DEJAGNU_SIM_INCLUDE_FLAGS)]} {
+    set_board_info cflags "[libgloss_include_flags] [newlib_include_flags] $env(DEJAGNU_SIM_INCLUDE_FLAGS)"
+} else {
+    set_board_info cflags "[libgloss_include_flags] [newlib_include_flags]"
+}
+
+if {[info exists env(DEJAGNU_SIM_LINK_FLAGS)]} {
+    set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] $env(DEJAGNU_SIM_LINK_FLAGS)"
+} else {
+    set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags]"
+}
 
 # This board doesn't use a linker script.
-set_board_info ldscript ""
+if {[info exists env(DEJAGNU_SIM_LDSCRIPT)]} {
+    set_board_info ldscript $env(DEJAGNU_SIM_LDSCRIPT)
+}
 
 # And, it can't do arguments, and doesn't have real signals.
 
