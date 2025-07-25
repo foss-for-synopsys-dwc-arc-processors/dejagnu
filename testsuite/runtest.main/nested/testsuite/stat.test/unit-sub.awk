@@ -1,4 +1,4 @@
-# Copyright (C) 2020, 2022 Free Software Foundation, Inc.
+# Copyright (C) 2020, 2022, 2025 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -41,7 +41,8 @@ END {
     else if (UNIT_RESULT == "unsupported")
 	print "\tUNSUPPORTED: sample unit test"
 
-    print "\tEND: unit-sub.awk done"
+    if (UNIT_RESULT != "bailout")
+	print "\tEND: unit-sub.awk done"
 }
 
 # EOF

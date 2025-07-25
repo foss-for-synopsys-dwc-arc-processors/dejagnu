@@ -1,3 +1,19 @@
+2025-07-24  Jacob Bachmeyer  <jcb@gnu.org>
+
+	PR79077
+
+	* doc/dejagnu.texi (DejaGnu unit test protocol): Document use of
+	UNRESOLVED to report failed unit test programs.
+
+	* lib/dejagnu.exp (host_execute): Emit UNRESOLVED result if unit
+	test program exits without producing an end marker.  Previously,
+	only a warning was produced.
+
+	* testsuite/runtest.main/stats.exp: Add unit "bailout" tests.
+	* testsuite/runtest.main/nested/testsuite/stat.test/unit-sub.awk:
+	Add "bailout" mode for simulating a unit test program that crashes
+	instead of producing output.
+
 2024-10-20  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR73907

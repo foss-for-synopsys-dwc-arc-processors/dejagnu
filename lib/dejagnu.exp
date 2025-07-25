@@ -1,4 +1,4 @@
-# Copyright (C) 1992-2019, 2020 Free Software Foundation, Inc.
+# Copyright (C) 1992-2019, 2020, 2025 Free Software Foundation, Inc.
 #
 # This file is part of DejaGnu.
 #
@@ -170,7 +170,8 @@ proc host_execute {args} {
 			$executable $arguments"
 	}
 	eof {
-	    warning "Test case did not emit an end marker"
+	    unresolved "unit test $executable $arguments\
+			 exited without an end marker"
 	}
 	timeout {
 	    warning "Timed out executing test case"
