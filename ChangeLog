@@ -8,6 +8,8 @@
 	The DejaGnu unit test protocol does not currently support known
 	failing tests.
 
+	Tighten test pattern for new unit "bailout" tests.
+
 2025-07-24  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR79077

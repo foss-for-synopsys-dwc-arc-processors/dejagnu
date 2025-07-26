@@ -54,8 +54,8 @@ set tests {
     { stats 0 4 unresolved "unresolved testcases\[ \t\]+1\n" }
     { stats 0 4 unsupported "unresolved testcases\[ \t\]+1\n" }
 
-    { unit 0 0 bailout "unresolved testcases\[ \t\]+1" }
-    { unit 1 0 bailout "unresolved testcases\[ \t\]+1" }
+    { unit 0 0 bailout "unresolved testcases\[ \t\]+1\n" }
+    { unit 1 0 bailout "unresolved testcases\[ \t\]+1\n" }
 
     { unit 0 0 pass "expected passes\[ \t\]+1\n" }
     { unit 0 0 fail "unexpected failures\[ \t\]+1\n" }
