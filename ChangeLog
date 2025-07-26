@@ -1,3 +1,13 @@
+2025-07-25  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* testsuite/runtest.main/stats.exp: Fix handling of test patterns.
+	Previously, the output of runtest was not being properly checked
+	against the expected patterns.
+
+	Remove KFAIL/KPASS tests for unit tests with warnings and errors.
+	The DejaGnu unit test protocol does not currently support known
+	failing tests.
+
 2025-07-24  Jacob Bachmeyer  <jcb@gnu.org>
 
 	PR79077
