@@ -2,6 +2,8 @@
 
 	PR79077
 
+	Thanks to Marc Nieper-Wisskirchen for reporting this oversight.
+
 	* doc/dejagnu.texi (DejaGnu unit test protocol): Document use of
 	UNRESOLVED to report failed unit test programs.
 
