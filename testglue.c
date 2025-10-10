@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1992-2024 Free Software Foundation, Inc.
+Copyright (C) 1992-2025 Free Software Foundation, Inc.
 
 This file is part of DejaGnu.
 
@@ -35,23 +35,29 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
    wrap _exit separately; it's actually a different function.  */
 
 #ifdef WRAP_M68K_AOUT
+
 #define REAL_EXIT(code) asm ( "trap %0" : : "i" (0) );
 #define REAL_ABORT() REAL_EXIT(6)
 #define ORIG_EXIT _exit
 #define ORIG_ABORT abort
-#else
+
+#else /* WRAP_M68K_AOUT not defined */
+
 #ifdef UNDERSCORES
+
 #define REAL_EXIT _real___exit
 #define REAL_MAIN _real__main
 #define REAL_ABORT _real__abort
 #define ORIG_EXIT _wrap___exit
 #define ORIG_ABORT _wrap__abort
 #define ORIG_MAIN _wrap__main
-#else
+
+#else /* UNDERSCORES not defined */
+
 #define REAL_EXIT __real_exit
 #ifndef VXWORKS
 #define REAL__EXIT __real__exit
-#endif
+#endif /* !VXWORKS */
 #define REAL_MAIN __real_main
 #define REAL_ABORT __real_abort
 #define ORIG_EXIT __wrap_exit
@@ -59,12 +65,12 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
 #define ORIG_ABORT __wrap_abort
 #define ORIG_MAIN __wrap_main
 
-#endif
+#endif /* UNDERSCORES */
 
 extern void abort (void);
 extern void exit (int);
 
-#endif
+#endif /* WRAP_M68K_AOUT */
 
 #ifdef REAL_MAIN
 extern void REAL_EXIT ();
@@ -139,7 +145,7 @@ ORIG__EXIT (code)
   REAL__EXIT (code);
   while (___constval);
 }
-#endif
+#endif /* ORIG__EXIT */
 
 void
 ORIG_ABORT ()
@@ -167,7 +173,7 @@ ORIG_MAIN (argc, argv, envp)
 #endif
   while (___constval);
 }
-#endif
+#endif /* REAL_MAIN */
 
 #ifdef VXWORKS
 void
@@ -200,4 +206,4 @@ __runexit ()
     __list[i]();
   __running = 0;
 }
-#endif
+#endif /* VXWORKS */

@@ -1,3 +1,7 @@
+2025-10-09  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* testglue.c: Annotate non-trivial preprocessor conditionals.
+
 2025-10-06  Rob Savoye  <rob@senecass.com>
 
 	* testglue.c: Add GPL copyright comment block.
