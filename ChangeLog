@@ -2,6 +2,18 @@
 
 	* testglue.c: Annotate non-trivial preprocessor conditionals.
 
+	Add ANSI-style function definitions, conditioned on __STDC__, for
+	write_int, ORIG_EXIT, ORIG__EXIT, ORIG_ABORT, ORIG_MAIN.  Make
+	prototypes conditional on __STDC__, except for code that is
+	conditional on VXWORKS, which already assumes that the compiler
+	accepts ANSI prototypes.  Efforts are made to preserve
+	compatibility with ancient pre-ANSI compilers here in case anyone
+	actually wants to test on such an ancient system.
+
+	Make prototypes for REAL_ABORT and REAL_EXIT conditional on those
+	macros being defined, instead of assuming they are defined if
+	REAL_MAIN is defined.
+
 2025-10-06  Rob Savoye  <rob@senecass.com>
 
 	* testglue.c: Add GPL copyright comment block.

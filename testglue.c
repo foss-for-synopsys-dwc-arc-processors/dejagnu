@@ -67,31 +67,44 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
 
 #endif /* UNDERSCORES */
 
+#ifdef __STDC__
 extern void abort (void);
 extern void exit (int);
+#endif
 
 #endif /* WRAP_M68K_AOUT */
 
-#ifdef REAL_MAIN
-extern void REAL_EXIT ();
-extern void REAL_ABORT ();
-extern int REAL_MAIN (int argc, char **argv, char **envp);
+#ifdef __STDC__
+#ifdef REAL_ABORT
+extern void REAL_ABORT (void);
+#endif
+#ifdef REAL_EXIT
+extern void REAL_EXIT (int);
 #endif
 #ifdef REAL__EXIT
-extern void REAL__EXIT ();
+extern void REAL__EXIT (int);
 #endif
+#ifdef REAL_MAIN
+extern int REAL_MAIN (int argc, char **argv, char **envp);
+#endif
+#endif /* __STDC__ */
 
 static int done_exit_message = 0;
 int ___constval = 1;
 
 #ifdef VXWORKS
-static void __runexit();
+static void __runexit(void);
 #endif
 
+#ifdef __STDC__
+static char *
+write_int(int val, char *ptr)
+#else
 static char *
 write_int(val, ptr)
      int val;
      char *ptr;
+#endif
 {
   char c;
   if (val<0) {
@@ -106,9 +119,14 @@ write_int(val, ptr)
   return ptr;
 }
 
+#ifdef __STDC__
+void
+ORIG_EXIT (int code)
+#else
 void
 ORIG_EXIT (code)
      int code;
+#endif
 {
   char buf[30];
   char *ptr;
@@ -126,9 +144,14 @@ ORIG_EXIT (code)
 }
 
 #ifdef ORIG__EXIT
+#ifdef __STDC__
+void
+ORIG__EXIT (int code)
+#else
 void
 ORIG__EXIT (code)
      int code;
+#endif
 {
   char buf[30];
   char *ptr;
@@ -147,8 +170,13 @@ ORIG__EXIT (code)
 }
 #endif /* ORIG__EXIT */
 
+#ifdef __STDC__
+void
+ORIG_ABORT (void)
+#else
 void
 ORIG_ABORT ()
+#endif
 {
   write (1, "\n*** EXIT code 4242\n", 20);
   REAL_ABORT ();
@@ -157,11 +185,16 @@ ORIG_ABORT ()
 }
 
 #ifdef REAL_MAIN
+#ifdef __STDC__
+int
+ORIG_MAIN (int argc, char **argv, char **envp)
+#else
 int
 ORIG_MAIN (argc, argv, envp)
      int argc;
      char **argv;
      char **envp;
+#endif
 {
 #ifdef WRAP_FILE_ARGS
   extern int __argc;
@@ -177,8 +210,7 @@ ORIG_MAIN (argc, argv, envp)
 
 #ifdef VXWORKS
 void
-_exit (status)
-     int status;
+_exit (int status)
 {
   REAL_EXIT (status);
 }
