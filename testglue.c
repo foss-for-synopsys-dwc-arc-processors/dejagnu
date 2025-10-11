@@ -41,7 +41,7 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
 #define ORIG_EXIT _exit
 #define ORIG_ABORT abort
 
-#else /* WRAP_M68K_AOUT not defined */
+#else /* not WRAP_M68K_AOUT */
 
 #ifdef UNDERSCORES
 
@@ -52,12 +52,12 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
 #define ORIG_ABORT _wrap__abort
 #define ORIG_MAIN _wrap__main
 
-#else /* UNDERSCORES not defined */
+#else /* not UNDERSCORES */
 
 #define REAL_EXIT __real_exit
 #ifndef VXWORKS
 #define REAL__EXIT __real__exit
-#endif /* !VXWORKS */
+#endif /* not VXWORKS */
 #define REAL_MAIN __real_main
 #define REAL_ABORT __real_abort
 #define ORIG_EXIT __wrap_exit
@@ -65,28 +65,28 @@ along with DejaGnu.  If not, see <http://www.gnu.org/licenses/>.
 #define ORIG_ABORT __wrap_abort
 #define ORIG_MAIN __wrap_main
 
-#endif /* UNDERSCORES */
+#endif /* not UNDERSCORES */
 
 #ifdef __STDC__
 extern void abort (void);
 extern void exit (int);
-#endif
+#endif /* __STDC__ */
 
-#endif /* WRAP_M68K_AOUT */
+#endif /* not WRAP_M68K_AOUT */
 
 #ifdef __STDC__
 #ifdef REAL_ABORT
 extern void REAL_ABORT (void);
-#endif
+#endif /* REAL_ABORT */
 #ifdef REAL_EXIT
 extern void REAL_EXIT (int);
-#endif
+#endif /* REAL_EXIT */
 #ifdef REAL__EXIT
 extern void REAL__EXIT (int);
-#endif
+#endif /* REAL__EXIT */
 #ifdef REAL_MAIN
 extern int REAL_MAIN (int argc, char **argv, char **envp);
-#endif
+#endif /* REAL_MAIN */
 #endif /* __STDC__ */
 
 static int done_exit_message = 0;
@@ -94,17 +94,17 @@ int ___constval = 1;
 
 #ifdef VXWORKS
 static void __runexit(void);
-#endif
+#endif /* VXWORKS */
 
 #ifdef __STDC__
 static char *
 write_int(int val, char *ptr)
-#else
+#else /* not __STDC__ */
 static char *
 write_int(val, ptr)
      int val;
      char *ptr;
-#endif
+#endif /* not __STDC__ */
 {
   char c;
   if (val<0) {
@@ -122,18 +122,18 @@ write_int(val, ptr)
 #ifdef __STDC__
 void
 ORIG_EXIT (int code)
-#else
+#else /* not __STDC__ */
 void
 ORIG_EXIT (code)
      int code;
-#endif
+#endif /* not __STDC__ */
 {
   char buf[30];
   char *ptr;
 
 #ifdef VXWORKS
   __runexit ();
-#endif
+#endif /* VXWORKS */
   strcpy (buf, "\n*** EXIT code ");
   ptr = write_int (code, buf + strlen(buf));
   *(ptr++) = '\n';
@@ -147,11 +147,11 @@ ORIG_EXIT (code)
 #ifdef __STDC__
 void
 ORIG__EXIT (int code)
-#else
+#else /* not __STDC__ */
 void
 ORIG__EXIT (code)
      int code;
-#endif
+#endif /* not __STDC__ */
 {
   char buf[30];
   char *ptr;
@@ -173,10 +173,10 @@ ORIG__EXIT (code)
 #ifdef __STDC__
 void
 ORIG_ABORT (void)
-#else
+#else /* not __STDC__ */
 void
 ORIG_ABORT ()
-#endif
+#endif /* not __STDC__ */
 {
   write (1, "\n*** EXIT code 4242\n", 20);
   REAL_ABORT ();
@@ -188,22 +188,22 @@ ORIG_ABORT ()
 #ifdef __STDC__
 int
 ORIG_MAIN (int argc, char **argv, char **envp)
-#else
+#else /* not __STDC__ */
 int
 ORIG_MAIN (argc, argv, envp)
      int argc;
      char **argv;
      char **envp;
-#endif
+#endif /* not __STDC__ */
 {
 #ifdef WRAP_FILE_ARGS
   extern int __argc;
   extern char *__args[];
 
   exit (REAL_MAIN (__argc,__args,envp));
-#else
+#else /* not WRAP_FILE_ARGS */
   exit (REAL_MAIN (argc, argv, envp));
-#endif
+#endif /* not WRAP_FILE_ARGS */
   while (___constval);
 }
 #endif /* REAL_MAIN */

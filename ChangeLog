@@ -1,3 +1,8 @@
+2025-10-10  Jacob Bachmeyer  <jcb@gnu.org>
+
+	* testglue.c: Revise preprocessor conditional annotations to more
+	closely follow the GNU Coding Standards.
+
 2025-10-09  Jacob Bachmeyer  <jcb@gnu.org>
 
 	* testglue.c: Annotate non-trivial preprocessor conditionals.
