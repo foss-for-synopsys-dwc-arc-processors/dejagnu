@@ -1,0 +1,196 @@
+proc check_target_arc { arg } {
+    global target_alias
+    global board
+    global board_info
+
+    if {[info exists board]} {
+	set target_board $board
+    } else {
+	set target_board [target_info name]
+    }
+
+    if { [board_info $target_board exists compiler] } {
+	set compiler [board_info $target_board compiler]
+    } else {
+	set compiler [find_gcc]
+    }
+
+    if { $compiler == "" } {
+	return 0
+    }
+
+    regexp "/.* " $compiler compiler
+    set compiler [string trimright $compiler " "]
+    verbose "compiler is $compiler"
+
+    if { [which $compiler] == 0 } {
+	return 0
+    }
+
+    if { [board_info $target_board exists multilib_flags] } {
+	set opts [board_info $target_board multilib_flags]
+    } else {
+	set opts ""
+    }
+
+    set result [eval exec $compiler $opts -dM -E - < /dev/null]
+    verbose "Default defines : $result"
+    return [regexp "$arg" "$result"]
+}
+
+
+# Return 1 if we compile for ARC-V
+proc check_target_arcv { } {
+    return [check_target_arc "__riscv"]
+}
+
+# Return 1 if we compile for ARC64
+proc check_target_arc64_64 { } {
+    return [check_target_arc "__ARC64_ARCH64__"]
+}
+
+# Return 1 if we compile for ARC64
+proc check_target_arc64_32 { } {
+    return [check_target_arc "__ARC64_ARCH32__"]
+}
+
+# Return 1 if we compile for ARCv2 HS
+proc check_target_archs { } {
+    return [check_target_arc "__ARCHS__"]
+}
+
+# Return 1 if we compile for ARCv2 EM
+proc check_target_arcem { } {
+    return [check_target_arc "__ARCEM__"]
+}
+
+# Return 1 if we compile for ARC700
+proc check_target_arc700 { } {
+    return [check_target_arc "__ARC700__"]
+}
+
+# Return 1 if we compile for ARC6xx
+proc check_target_arc6xx { } {
+    if { [check_target_arc "__ARC600__"]
+	 || [check_target_arc "__ARC601__"] } {
+	return 1
+    }
+    return 0
+}
+
+# Return 1 if we compile for ARC600
+proc check_target_arc600 { } {
+    return [check_target_arc "__ARC600__"]
+}
+
+# Return 1 if we compile for ARC601
+proc check_target_arc601 { } {
+    return [check_target_arc "__ARC601__"]
+}
+
+proc arc_get_target_nsim_flags { } {
+    set nsim_flags {}
+    if {[check_target_arc64_64]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=arc64 \
+        -p nsim_isa_div_rem_option=2 \
+        -p nsim_isa_mpy_option=9 \
+        -p nsim_isa_mpy64=1 \
+        -p nsim_isa_div64_option=1 \
+        -p nsim_isa_has_fp=1 \
+        -p nsim_isa_fp_vec_option=1 \
+        -p nsim_isa_fp_hp_option=1 \
+        -p nsim_isa_fp_dp_option=1 \
+        -p nsim_isa_fp_div_option=1 \
+        -p nsim_isa_fp_num_regs=32 \
+        -p nsim_isa_unaligned_option=1
+    } elseif {[check_target_arc64_32]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=av3hs \
+        -p nsim_isa_pc_size=32 \
+        -p nsim_isa_addr_size=32 \
+        -p nsim_isa_swap_option=1 \
+        -p nsim_isa_bitscan_option=1 \
+        -p nsim_isa_div_rem_option=2 \
+        -p nsim_isa_mpy_option=9 \
+        -p nsim_isa_unaligned_option=1
+    } elseif {[check_target_arc700]} {
+        # GCC requires multiplier for ARC 700.
+        lappend nsim_flags \
+        -p nsim_isa_family=a700 \
+        -on nsim_isa_sat \
+        -on nsim_isa_mpy32
+    } elseif {[check_target_arc600]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=a600 \
+        -p nsim_isa_core=6 \
+        -on nsim_isa_sat
+    } elseif {[check_target_arc601]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=a601 \
+        -p nsim_isa_core=6 \
+        -on nsim_isa_sat
+    } elseif {[check_target_archs]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=av2hs \
+        -p nsim_isa_core=3 \
+        -on nsim_isa_sat
+        # Assume the SQRT is defined when we use DSP extensions
+        if {[check_target_arc "__ARC_DSP__"] == 1} {
+        lappend nsim_flags \
+            -p nsim_isa_dsp_divsqrt_option=2 \
+            -p nsim_isa_dsp_wide_option=1
+        }
+    } elseif {[check_target_arcem]} {
+        lappend nsim_flags \
+        -p nsim_isa_family=av2em \
+        -p nsim_isa_core=3 \
+        -on nsim_isa_sat
+    } else {
+        perror "Unknown CPU configuration"
+    }
+
+    set nsim_gcc_mapping {
+        "__ARC64_ATOMIC_1__"	1	nsim_isa_atomic_option=1
+        "__ARC64_ATOMIC_2__"	1	nsim_isa_atomic_option=2
+        "__ARC64_ATOMIC_3__"	1	nsim_isa_atomic_option=3
+        "__ARC64_LL64__"		1	nsim_isa_ll64_option=1
+        "__ARC64_M128__"		1	nsim_isa_m128_option=1
+        "__ARC64_WIDE_VECTOR__"	1	nsim_isa_fp_wide_option=1
+        "__ARC_ATOMIC__"		1	nsim_isa_atomic_option=1
+        "__ARC_BARREL_SHIFTER__"	0	nsim_isa_shift_option=0
+        "__ARC_CODE_DENSITY__"	1	nsim_isa_code_density_option=2
+        "__ARC_DIVREM__"		1	nsim_isa_div_rem_option=2
+        "__ARC_FPU_ASSIST__ "	1	nsim_isa_fpuda_option=1
+        "__ARC_FPU_DP__"		1	nsim_isa_fpud_option=1
+        "__ARC_FPU_DP_DIV__"	1	nsim_isa_fpud_div_option=1
+        "__ARC_FPU_DP_FMA__"	1	nsim_isa_fpu_mac_option=1
+        "__ARC_FPU_SP__"		1	nsim_isa_fpus_option=1
+        "__ARC_FPU_SP_DIV__"	1	nsim_isa_fpus_div_option=1
+        "__ARC_FPU_SP_FMA__"	1	nsim_isa_fpu_mac_option=1
+        "__ARC_FPX_SP__"		1	nsim_isa_spfp=fast
+        "__ARC_FPX_DP__"		1	nsim_isa_dpfp=fast
+        "__ARC_LL64__"		1	nsim_isa_ll64_option=1
+        "__ARC_MPY_WLH1__"		1	nsim_isa_mpy_option=2
+        "__ARC_MPY_WLH2__"		1	nsim_isa_mpy_option=3
+        "__ARC_MPY_WLH3__"		1	nsim_isa_mpy_option=4
+        "__ARC_MPY_WLH4__"		1	nsim_isa_mpy_option=5
+        "__ARC_MPY_WLH5__"		1	nsim_isa_mpy_option=6
+        "__ARC_MPY_DMPY__"		1	nsim_isa_mpy_option=7
+        "__ARC_MPY_MACD__"		1	nsim_isa_mpy_option=8
+        "__ARC_MPY_QMACW__"		1	nsim_isa_mpy_option=9
+        "__ARC_MULT32__"		1	nsim_isa_mult32=1
+        "__ARC_MUL32BY16__"		1	nsim_isa_mul32x16=1
+        "__ARC_NORM__"		0	nsim_isa_bitscan_option=0
+        "__ARC_RF16__"		1	nsim_isa_rgf_num_regs=16
+        "__ARC_DSP__"               1       nsim_isa_dsp_option=3
+    }
+
+    foreach {gcc_define set_if_defined nsim_prop} $nsim_gcc_mapping {
+        if {[check_target_arc $gcc_define] == $set_if_defined} {
+        lappend nsim_flags -p $nsim_prop
+        }
+    }
+
+    return nsim_flags
+}

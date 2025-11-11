@@ -50,6 +50,7 @@ pkgdata_DATA = \
   stub-loader.c \
   testglue.c \
   runtest.exp \
+  lib/arc.exp \
   lib/debugger.exp \
   lib/dejagnu.exp \
   lib/dg.exp \
@@ -58,6 +59,7 @@ pkgdata_DATA = \
   lib/ftp.exp \
   lib/kermit.exp \
   lib/libgloss.exp \
+  lib/nsim.exp \
   lib/remote.exp \
   lib/rlogin.exp \
   lib/rsh.exp \
@@ -93,6 +95,7 @@ baseboard_DATA = \
 	baseboards/aarch64-sim.exp \
 	baseboards/am33_2.0-libremote.exp \
 	baseboards/androideabi.exp \
+	baseboards/arc-nsim.exp \
 	baseboards/arm-ice.exp \
 	baseboards/arm-sid.exp \
 	baseboards/arm-sim.exp \

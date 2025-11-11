@@ -1,0 +1,180 @@
+set_board_info target_install {arc-snps-elf arceb-snps-elf arc32-snps-elf arc64-snps-elf}
+load_generic_config "sim"
+load_base_board_description "basic-sim"
+
+load_lib "arc.exp"
+load_lib "nsim.exp"
+
+process_multilib_options "$env(DEJAGNU_ARC_MULTILIB_OPTIONS)"
+
+set nsim_flags {}
+set hostlink ""
+set extra_cflags {}
+set extra_ldflags {}
+
+lappend nsim_flags \
+    -on nsim_isa_enable_timer_0 \
+    -on nsim_isa_enable_timer_1 \
+    -off invalid_instruction_interrupt \
+    -off memory_exception_interrupt \
+    -on nsim_download_elf_sections \
+    -on nsim_fast
+
+if {[string match arceb-* $target_triplet]} {
+    lappend nsim_flags -on nsim_isa_big_endian
+}
+
+if {[info exists env(DEJAGNU_ARC_NSIM_HOSTLINK)]} {
+    set hostlink $env(DEJAGNU_ARC_NSIM_HOSTLINK)
+} else {
+    set hostlink "metaware"
+}
+
+switch -- $hostlink {
+    "metaware" {
+	lappend extra_ldflags "-specs=hl.specs"
+	# MetaWare hostlink can return values.
+	set_board_info gdb,noresults 0
+    }
+    "gnu" {
+	lappend nsim_flags -on nsim_emt
+	lappend extra_ldflags "-specs=nsim.specs"
+	set_board_info gdb,noresults 1
+    }
+    default {
+	error "Hostlink should be gnu or metaware"
+    }
+}
+
+if {[check_target_arc64_64]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=arc64 \
+	-p nsim_isa_div_rem_option=2 \
+	-p nsim_isa_mpy_option=9 \
+	-p nsim_isa_mpy64=1 \
+	-p nsim_isa_div64_option=1 \
+	-p nsim_isa_has_fp=1 \
+	-p nsim_isa_fp_vec_option=1 \
+	-p nsim_isa_fp_hp_option=1 \
+	-p nsim_isa_fp_dp_option=1 \
+	-p nsim_isa_fp_div_option=1 \
+	-p nsim_isa_fp_num_regs=32 \
+	-p nsim_isa_unaligned_option=1
+} elseif {[check_target_arc64_32]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=av3hs \
+	-p nsim_isa_pc_size=32 \
+	-p nsim_isa_addr_size=32 \
+	-p nsim_isa_swap_option=1 \
+	-p nsim_isa_bitscan_option=1 \
+	-p nsim_isa_div_rem_option=2 \
+	-p nsim_isa_mpy_option=9 \
+	-p nsim_isa_unaligned_option=1
+} elseif {[check_target_arc700]} {
+    # GCC requires multiplier for ARC 700.
+    lappend nsim_flags \
+	-p nsim_isa_family=a700 \
+	-on nsim_isa_sat \
+	-on nsim_isa_mpy32
+} elseif {[check_target_arc600]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=a600 \
+	-p nsim_isa_core=6 \
+	-on nsim_isa_sat
+} elseif {[check_target_arc601]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=a601 \
+	-p nsim_isa_core=6 \
+	-on nsim_isa_sat
+} elseif {[check_target_archs]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=av2hs \
+	-p nsim_isa_core=3 \
+	-on nsim_isa_sat
+    # Assume the SQRT is defined when we use DSP extensions
+    if {[check_target_arc "__ARC_DSP__"] == 1} {
+	lappend nsim_flags \
+	    -p nsim_isa_dsp_divsqrt_option=2 \
+	    -p nsim_isa_dsp_wide_option=1
+    }
+} elseif {[check_target_arcem]} {
+    lappend nsim_flags \
+	-p nsim_isa_family=av2em \
+	-p nsim_isa_core=3 \
+	-on nsim_isa_sat
+} else {
+    perror "Unknown CPU configuration"
+}
+
+set nsim_gcc_mapping {
+    "__ARC64_ATOMIC_1__"	1	nsim_isa_atomic_option=1
+    "__ARC64_ATOMIC_2__"	1	nsim_isa_atomic_option=2
+    "__ARC64_ATOMIC_3__"	1	nsim_isa_atomic_option=3
+    "__ARC64_LL64__"		1	nsim_isa_ll64_option=1
+    "__ARC64_M128__"		1	nsim_isa_m128_option=1
+    "__ARC64_WIDE_VECTOR__"	1	nsim_isa_fp_wide_option=1
+    "__ARC_ATOMIC__"		1	nsim_isa_atomic_option=1
+    "__ARC_BARREL_SHIFTER__"	0	nsim_isa_shift_option=0
+    "__ARC_CODE_DENSITY__"	1	nsim_isa_code_density_option=2
+    "__ARC_DIVREM__"		1	nsim_isa_div_rem_option=2
+    "__ARC_FPU_ASSIST__ "	1	nsim_isa_fpuda_option=1
+    "__ARC_FPU_DP__"		1	nsim_isa_fpud_option=1
+    "__ARC_FPU_DP_DIV__"	1	nsim_isa_fpud_div_option=1
+    "__ARC_FPU_DP_FMA__"	1	nsim_isa_fpu_mac_option=1
+    "__ARC_FPU_SP__"		1	nsim_isa_fpus_option=1
+    "__ARC_FPU_SP_DIV__"	1	nsim_isa_fpus_div_option=1
+    "__ARC_FPU_SP_FMA__"	1	nsim_isa_fpu_mac_option=1
+    "__ARC_FPX_SP__"		1	nsim_isa_spfp=fast
+    "__ARC_FPX_DP__"		1	nsim_isa_dpfp=fast
+    "__ARC_LL64__"		1	nsim_isa_ll64_option=1
+    "__ARC_MPY_WLH1__"		1	nsim_isa_mpy_option=2
+    "__ARC_MPY_WLH2__"		1	nsim_isa_mpy_option=3
+    "__ARC_MPY_WLH3__"		1	nsim_isa_mpy_option=4
+    "__ARC_MPY_WLH4__"		1	nsim_isa_mpy_option=5
+    "__ARC_MPY_WLH5__"		1	nsim_isa_mpy_option=6
+    "__ARC_MPY_DMPY__"		1	nsim_isa_mpy_option=7
+    "__ARC_MPY_MACD__"		1	nsim_isa_mpy_option=8
+    "__ARC_MPY_QMACW__"		1	nsim_isa_mpy_option=9
+    "__ARC_MULT32__"		1	nsim_isa_mult32=1
+    "__ARC_MUL32BY16__"		1	nsim_isa_mul32x16=1
+    "__ARC_NORM__"		0	nsim_isa_bitscan_option=0
+    "__ARC_RF16__"		1	nsim_isa_rgf_num_regs=16
+    "__ARC_DSP__"               1       nsim_isa_dsp_option=3
+}
+
+foreach {gcc_define set_if_defined nsim_prop} $nsim_gcc_mapping {
+    if {[check_target_arc $gcc_define] == $set_if_defined} {
+	lappend nsim_flags -p $nsim_prop
+    }
+}
+
+# GCC generates improper DWARF info when frame-pointer is involved - all
+# variables in debug information are specified relatively to FP register
+# instead of a virtual frame base, hence this information is invalid in
+# prologue and epilogue. Since GDB doesn't epilogue (at least as of now),
+# some watchpoint tests fail, because they get an extra watchpoint value
+# change even though it is not a variable that has changed, by a FP
+# register in epilogue.
+if { $tool == "gdb" } {
+    lappend extra_cflags -fomit-frame-pointer
+}
+
+set_board_info compiler "[find_gcc]"
+set_board_info cflags "[libgloss_include_flags] [newlib_include_flags] $extra_cflags"
+set_board_info ldscript ""
+
+if {[info exists env(DEJAGNU_ARC_EXTRA_LDFLAGS)]} {
+    set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] $extra_ldflags $env(DEJAGNU_ARC_EXTRA_LDFLAGS)"
+} else {
+    set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] $extra_ldflags"
+}
+
+set_board_info is_simulator 1
+set_board_info sim "nsimdrv"
+set_board_info sim,options $nsim_flags
+set_board_info sim_time_limit 1200
+set_board_info gcc,timeout 1200
+
+# nsimdrv doesn't return application's exit code as it's own exit code, thus it
+# is required to use status wrapper, that will print "***EXIT <number>" message.
+set_board_info needs_status_wrapper 1
